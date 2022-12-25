@@ -720,8 +720,10 @@ a {
 
   &__tracker {
     position: absolute;
-    top: 10%;
-    left: 5%;
+    top: 5%;
+    left: 3%;
+    width: 14%;
+    height: auto;
     display: none;
   }
 }
