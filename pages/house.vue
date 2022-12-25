@@ -373,7 +373,16 @@ export default {
               this.closeModalAndMoveGame()
             },
             this
-          )
+          );
+          this.$phaser.eventEmitter.addListener(
+            'close',
+            () => {
+              this.createGame = null;
+              this.closeModal()
+            },
+            this
+          );
+
         })
       }
     },

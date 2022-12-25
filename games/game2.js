@@ -11,6 +11,7 @@ const createGame = (config = {}) => {
   var back;
   var kontur;
   var paint = false;
+  var closeBtn;
 
   var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take'];
   var musics = {};
@@ -118,6 +119,9 @@ const createGame = (config = {}) => {
       img.setDepth(2);
       img.on('pointerdown', function (pointer, localX, localY, event) {
         if (last == this || !last) {
+          if (!line) {
+            musics.pic_take.play();
+          }
           last = img;
           paint = true;
           start = { 'x': this.x, 'y': this.y };
@@ -242,6 +246,7 @@ const createGame = (config = {}) => {
       that.load.image(x, 'game2/' + x + ".png");
     });
 
+    that.load.image('close', 'common/close.png');
     commonMusics.forEach(x => that.load.audio(x, 'common/' + x + '.mp3'));
   }
 
@@ -258,6 +263,16 @@ const createGame = (config = {}) => {
     commonMusics.forEach(x => musics[x] = that.sound.add(x));
 
     showTutorial();
+
+    closeBtn = that.add.image( 530, 70, 'close');
+    closeBtn.setDepth(7);
+    closeBtn.setInteractive();
+    closeBtn.setScale(startPos.common.scale);
+    closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
+      musics['button_common'].play();
+      PhaserNuxt.eventEmitter.emit('close');
+
+    });
     that.input.on('pointerup', function (pointer) {
       line = null;
       paint = false;
@@ -273,6 +288,7 @@ const createGame = (config = {}) => {
 
 
     }, this);
+
 
   }
 

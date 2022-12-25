@@ -1,7 +1,7 @@
 const createGame = (config = {}) => {
   var that;
   var piano;
-
+  var closeBtn;
   var bars = [];
   var buttons = [];
   var btns = [];
@@ -49,7 +49,7 @@ const createGame = (config = {}) => {
   var musics = {};
   function preload() {
     that = this;
-
+    that.load.image('close', 'common/close.png');
     imgs.forEach(x => that.load.image(x, 'game3/' + x + '.png'));
     that.load.image('background', 'game3/piano_background.png');
     that.load.image('bar', 'game3/bar.png');
@@ -89,6 +89,7 @@ const createGame = (config = {}) => {
     that.load.audio('wrong', 'game3/wrong.mp3');
 
     commonMusics.forEach(x => that.load.audio(x, 'common/' + x + '.mp3'));
+    that.load.image('close', 'common/close.png');
   }
 
   function create() {
@@ -121,6 +122,16 @@ const createGame = (config = {}) => {
     ];
 
     showTutorial();
+
+    closeBtn = that.add.image(530, 70, 'close');
+    closeBtn.setDepth(7);
+    closeBtn.setInteractive();
+    closeBtn.setScale(startPos.common.scale);
+    closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
+      musics['button_common'].play();
+      PhaserNuxt.eventEmitter.emit('close');
+
+    });
   }
 
   function update() {

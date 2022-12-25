@@ -174,6 +174,15 @@ const createGame = (config = {}) => {
     });
 
     showTutorial();
+    closeBtn = that.add.image(530, 70, 'close');
+    closeBtn.setDepth(7);
+    closeBtn.setInteractive();
+    closeBtn.setScale(startPos.common.scale);
+    closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
+      musics['button_common'].play();
+      PhaserNuxt.eventEmitter.emit('close');
+
+    });
   }
 
   function update() {

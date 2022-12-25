@@ -137,6 +137,7 @@ const createGame = (config = {}) => {
     that.load.audio('all', 'game4/robovoice_full.mp3')
 
     commonMusics.forEach((x) => that.load.audio(x, 'common/' + x + '.mp3'))
+    that.load.image('close', 'common/close.png');
   }
 
   function create() {
@@ -148,6 +149,15 @@ const createGame = (config = {}) => {
     commonMusics.forEach((x) => (musics[x] = that.sound.add(x)))
 
     showTutorial()
+    closeBtn = that.add.image(530, 70, 'close');
+    closeBtn.setDepth(7);
+    closeBtn.setInteractive();
+    closeBtn.setScale(startPos.common.scale);
+    closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
+      musics['button_common'].play();
+      PhaserNuxt.eventEmitter.emit('close');
+
+    });
   }
 
   function resetLevel() {
