@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NuxtLink to="/">Back</NuxtLink>
+    <NuxtLink to="/house">Back</NuxtLink>
     <PhaserGame v-if="createGame" :create-game="createGame" />
   </div>
 </template>

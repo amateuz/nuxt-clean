@@ -1,0 +1,27 @@
+{
+  "resources": [
+    "game5/tale.mp3"
+  ],
+  "spritemap": {
+    "frame_1": {
+      "start": 0,
+      "end": 71,
+      "loop": false
+    },
+    "frame_2": {
+      "start": 72,
+      "end": 142,
+      "loop": false
+    },
+    "frame_3": {
+      "start": 143,
+      "end": 214,
+      "loop": false
+    },
+    "frame_4": {
+      "start": 215,
+      "end": 284,
+      "loop": false
+    }
+  }
+}

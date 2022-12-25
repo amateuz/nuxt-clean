@@ -55,10 +55,15 @@ export default {
   plugins: [
     { src: 'node_modules/nuxtjs-phaser', mode: 'client' },
     { src: '@/plugins/vClickOutside', ssr: false },
+    '~plugins/vue-final-modal.js',
+    '~/components/global/init.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: {
+    path: '~/components',
+    ignore: ['./global/*/**.{vue,js}'],
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -73,6 +78,8 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     'cookie-universal-nuxt',
+    'nuxt-svg-loader',
+    '@nuxt/image',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -83,6 +90,13 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['gsap'],
+    extractCSS: {
+      ignoreOrder: false,
+    },
+    transpile: ['gsap', 'vue-final-modal'],
+  },
+
+  server: {
+    host: '0.0.0.0',
   },
 }
