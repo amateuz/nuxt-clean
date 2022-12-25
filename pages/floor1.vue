@@ -10,7 +10,7 @@ import Vue from 'vue'
 import PhaserGame from 'nuxtjs-phaser/dist/phaserGame.vue'
 
 const getGame = async (config = {}) => {
-  const { default: createGame } = await import('../games/game1.js')
+  const { default: createGame } = await import('../games/game2.js')
   return createGame
 }
 

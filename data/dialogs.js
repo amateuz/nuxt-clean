@@ -9,7 +9,7 @@ export default [
         text: 'Нужно найти <br /> подходящий <br /> костюм',
         button: {
           text: 'Играть',
-          link: '/floor6',
+          link: 'modal',
         },
       },
     ],
@@ -27,7 +27,7 @@ export default [
         text: 'А где мои <br /> наушники?',
         button: {
           text: 'Играть',
-          link: '/floor5',
+          link: 'modal',
         },
       },
     ],
@@ -45,7 +45,7 @@ export default [
         text: 'Это могло бы <br /> стать отличным <br /> поздравлением.',
         button: {
           text: 'Играть',
-          link: '/floor4',
+          link: 'modal',
         },
       },
     ],
@@ -63,7 +63,7 @@ export default [
         text: 'Совсем нет <br /> настроения!',
         button: {
           text: 'Играть',
-          link: '/floor3',
+          link: 'modal',
         },
       },
     ],
@@ -81,7 +81,7 @@ export default [
         text: 'Какая же <br /> здесь связь?',
         button: {
           text: 'Играть',
-          link: '/floor2',
+          link: 'modal',
         },
       },
     ],

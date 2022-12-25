@@ -1,223 +1,322 @@
 <template>
-  <section class="house-page">
-    <div
-      class="house-page__container"
-      :class="{ [`house-page__container_blur-content`]: showModal }"
-    >
-      <div class="house-page__content-container container">
-        <div class="house-page__house sber-house">
-          <img
-            class="sber-house__img"
-            src="/house.png"
-            alt="sber house image"
-          />
-          <template v-for="floorNum in floorCount">
-            <div
-              :key="floorNum"
-              :class="`sber-house__floor floor floor_${
-                floorCount - floorNum + 1
-              }`"
-            >
-              <div class="floor__content">
+  <section
+    class="house-page"
+    :class="{ zoomed: zoomed }"
+    @click="someMethod($event)"
+  >
+    <!--    <button @click="zoomed = true">Zoom</button>-->
+    <!--    <button @click="zoomed = false">Unzoom</button>-->
+    <!--    <button @click="curGame++">Next</button>-->
+    <!--    <button @click="curGame&#45;&#45;">Prev</button>-->
+    <!--    <div>{{ curGame }}</div>-->
+    <template>
+      <div
+        class="house-page__container"
+        :class="{ [`house-page__container_blur-content`]: showModal }"
+      >
+        <div class="house-page__content-container container">
+          <div class="house-page__house sber-house">
+            <nuxt-img
+              preload
+              placeholder
+              class="sber-house__img"
+              src="/house.png"
+              alt="sber house image"
+              @load="onImgLoad"
+            />
+            <template v-for="floorNum in floorCount">
+              <div
+                :key="floorNum"
+                :class="[
+                  `sber-house__floor floor floor_${floorCount - floorNum + 1}`,
+                  {
+                    [`floor_disabled`]: curGame < floorCount - floorNum + 1,
+                  },
+                ]"
+              >
+                <div class="floor__content">
+                  <nuxt-img
+                    v-if="floorNum === 6"
+                    preload
+                    placeholder
+                    class="floor__img"
+                    :src="`/floors/floor${floorCount - floorNum + 1}.png`"
+                    :alt="`floor ${floorCount - floorNum + 1} img`"
+                    @load="onImgLoad"
+                  />
+                  <nuxt-img
+                    v-else
+                    preload
+                    placeholder
+                    class="floor__img"
+                    :src="`/floors/floor${floorCount - floorNum + 1}.png`"
+                    :alt="`floor ${floorCount - floorNum + 1} img`"
+                    @load="onImgLoad"
+                  />
+                  <template v-if="floorNum === 1">
+                    <div
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="40%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 2">
+                    <div
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="55%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 3">
+                    <div
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="40%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 4">
+                    <div
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="30%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 5">
+                    <div
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="40%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 6">
+                    <div
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        :disabled="showModal"
+                        bottom="102%"
+                        right="40%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      <vue-final-modal
+        v-model="showModal"
+        classes="modal-container"
+        content-class="modal-content"
+        @closed="closeModal"
+      >
+        <template v-if="curGame === 1">
+          <div class="game1">
+            <div v-if="gameStep === 0" class="game1__start-container">
+              <!--              <Btn-->
+              <!--                class="game1__close-btn"-->
+              <!--                w="40px"-->
+              <!--                h="40px"-->
+              <!--                max-w="40px"-->
+              <!--                max-h="40px"-->
+              <!--                @click.native="closeModal"-->
+              <!--              />-->
+              <nuxt-img class="game1__start-img" src="/game1/game1-start.png" />
+              <Btn
+                class="game1__start-btn"
+                bg="3"
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                br="35"
+                @click="startGame"
+              />
+            </div>
+            <div v-else-if="gameStep === 1" class="game1__game-container">
+              <template v-for="i in 5">
                 <nuxt-img
-                  v-if="floorNum === 6"
-                  class="floor__img"
-                  :src="`/floors/floor${floorCount - floorNum + 1}.png`"
-                  :alt="`floor ${floorCount - floorNum + 1} img`"
+                  v-if="!imgClicked[i - 1]"
+                  preload
+                  :key="i"
+                  :class="`game1__item game1__item_${i}`"
+                  :src="`/game1/item${i - 1}-ph.png`"
+                  @click.native="onImgClicked($event, i - 1)"
                 />
                 <nuxt-img
                   v-else
-                  class="floor__img"
-                  :src="`/floors/floor${floorCount - floorNum + 1}.png`"
-                  :alt="`floor ${floorCount - floorNum + 1} img`"
+                  preload
+                  :key="i + 10"
+                  :class="`game1__item game1__item_${i}`"
+                  :src="`/game1/item${i - 1}.png`"
+                  @click.native="onImgClicked($event, i - 1)"
                 />
-                <template v-if="floorNum === 1">
-                  <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                    />
-                    <img
-                      class="top__img"
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 2">
-                  <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="55%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                    />
-                    <img
-                      class="top__img"
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 3">
-                  <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                    />
-                    <nuxt-img
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 4">
-                  <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="30%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                    />
-                    <img
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 5">
-                  <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                    />
-                    <img
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 6">
-                  <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      :disabled="showModal"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <img
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                    />
-                  </div>
-                </template>
-              </div>
+                <nuxt-img
+                  preload
+                  :key="i + 20"
+                  :src="`game1/tracker${i - 1}.png`"
+                  class="game1__tracker game-tracker"
+                  :class="{
+                    'game-tracker_visible':
+                      imgClicked.filter((x) => x).length === i - 1,
+                  }"
+                />
+              </template>
+              <nuxt-img
+                preload
+                class="game1__tracker game-tracker"
+                :class="{ 'game-tracker_visible': imgClicked.every((x) => x) }"
+                src="/game1/tracker5.png"
+              />
+              <nuxt-img class="game1__floor" src="/floors/floor1.png" />
             </div>
-          </template>
-        </div>
-      </div>
-    </div>
-    <vue-final-modal
-      v-model="showModal"
-      classes="modal-container"
-      content-class="modal-content"
-      @closed="closeModal"
-    >
-      <div class="game1">
-        <div v-if="gameStep === 0" class="game1__start-container">
-          <Btn
-            class="game1__close-btn"
-            w="40px"
-            h="40px"
-            max-w="40px"
-            max-h="40px"
-            @click.native="closeModal"
-          />
-          <nuxt-img class="game1__start-img" src="/game1/game1-start.png" />
-          <Btn
-            class="game1__start-btn"
-            bg="3"
-            w="37%"
-            h="10%"
-            max-w="160px"
-            max-h="50px"
-            br="35"
-            @click="startGame"
-          />
-        </div>
-        <div v-else-if="gameStep === 1" class="game1__game-container">
-          <template v-for="i in 5">
-            <nuxt-img
-              v-if="!imgClicked[i - 1]"
-              :key="i"
-              :class="`game1__item game1__item_${i}`"
-              :src="`/game1/item${i - 1}-ph.png`"
-              @click.native="onImgClicked($event, i - 1)"
-            />
-            <nuxt-img
-              v-else
-              :key="i"
-              :class="`game1__item game1__item_${i}`"
-              :src="`/game1/item${i - 1}.png`"
-              @click.native="onImgClicked($event, i - 1)"
-            />
-          </template>
-          <nuxt-img
-            v-if="imgClicked.every((x) => x)"
-            class="game1__top"
-            src="/tops/top1-win.png"
-          />
-          <nuxt-img class="game1__floor" src="/floors/floor1.png" />
-        </div>
-      </div>
-    </vue-final-modal>
+            <div v-else-if="gameStep === 2" class="game1__finish-container">
+              <!--              <Btn-->
+              <!--                class="game1__close-btn"-->
+              <!--                w="40px"-->
+              <!--                h="40px"-->
+              <!--                max-w="40px"-->
+              <!--                max-h="40px"-->
+              <!--                @click.native="closeModal"-->
+              <!--              />-->
+              <nuxt-img
+                class="game1__start-img"
+                src="/game1/game1-finish.png"
+              />
+              <Btn
+                class="game1__start-btn"
+                bg="4"
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                br="35"
+                @click="closeModalAndMoveGame"
+              />
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <PhaserGame v-if="createGame" :create-game="createGame" />
+        </template>
+      </vue-final-modal>
+    </template>
   </section>
 </template>
 
 <script>
+import PhaserGame from 'nuxtjs-phaser/dist/phaserGame.vue'
 import dataDialogs from '~/data/dialogs'
+
+// eslint-disable-next-line no-unused-vars
+const setPhaserFocus = () => {
+  const phaser = document.getElementById('phaser')
+  if (phaser) phaser.focus()
+}
 export default {
   name: 'Index2',
+  components: { PhaserGame },
   data() {
     return {
+      createGame: undefined,
+      curGame: 1,
+      isLoading: true,
+      imgLoaded: 0,
+
       dialogs: dataDialogs,
       showModal: false,
       imgClicked: [false, false, false, false, false],
@@ -232,69 +331,53 @@ export default {
         maxAge: 60 * 60 * 24 * 30,
         path: '/',
       },
+      zoomed: false,
     }
   },
   watch: {
     floorCookieValue(newValue) {
       this.setFloorCookie(newValue)
     },
+    imgLoaded(newValue) {
+      if (newValue > 24) this.isLoading = false
+    },
+    curGame(newValue) {
+      if (newValue > 1) setPhaserFocus()
+    },
+    imgClicked: {
+      deep: true,
+      handler: function (newValue) {
+        if (newValue.every((x) => x)) {
+          setTimeout(() => {
+            this.gameStep = 2
+          }, 1000)
+        }
+      },
+    },
   },
+  beforeCreate() {},
   created() {
     this.floorCookieValue = +this.getFloorCookie(this.floorCookieName)
   },
   methods: {
-    animateHero(fromHero, toHero) {
-      const clone = fromHero.cloneNode(true)
+    async dialogBtnClicked(event, floorNum) {
+      this.showModal = true
+      if (this.curGame > 1) {
+        this.createGame = await this.getGame()
+        setPhaserFocus()
 
-      const from = this.calculatePosition(fromHero)
-      const to = this.calculatePosition(toHero)
-
-      this.$gsap.set([fromHero, toHero], { visibility: 'hidden' })
-      this.$gsap.set(clone, { position: 'absolute', margin: 0 })
-
-      this.$refs.body.$el.appendChild(clone)
-
-      const style = {
-        x: to.left - from.left,
-        y: to.top - from.top,
-        width: to.width,
-        height: to.height,
-        autoRound: false,
-        ease: 'power1.easeOut',
-        onComplete,
-      }
-
-      function onComplete() {
-        this.$gsap.set(toHero, { visibility: 'visible' })
-        this.$refs.body.$el.removeChild(clone)
-      }
-
-      this.$gsap.set(clone, from)
-      this.$gsap.to(clone, 0.3, style)
-    },
-    calculatePosition(element) {
-      const rect = element.getBoundingClientRect()
-
-      const scrollTop = window.pageYOffset || this.$root.scrollTop || 0
-      const scrollLeft = window.pageXOffset || this.$root.scrollLeft || 0
-
-      const clientTop = this.$root.clientTop || 0
-      const clientLeft = this.$root.clientLeft || 0
-
-      return {
-        top: Math.round(rect.top + scrollTop - clientTop),
-        left: Math.round(rect.left + scrollLeft - clientLeft),
-        height: rect.height,
-        width: rect.width,
+        this.$nextTick(() => {
+          this.$phaser.eventEmitter.addListener(
+            'exit',
+            () => {
+              this.closeModalAndMoveGame()
+            },
+            this
+          )
+        })
       }
     },
     runDialog(event, dialogNum) {
-      // let elem = event.target
-      // if (elem.tagName !== 'a') elem = elem.parentElement
-      // elem.classList.toggle('bordered')
-      // return
-      // console.log(this.$refs)
-      // this.animateHero(event.target, this.$refs.body.$el)
       this.dialogs[dialogNum].timesClicked += 1
       if (
         this.dialogs[dialogNum].timesClicked >=
@@ -302,34 +385,64 @@ export default {
       )
         this.dialogs[dialogNum].timesClicked = 0
     },
-    closeDialog() {},
-    dialogBtnClicked(event, floorNum) {
-      this.showModal = true
-    },
+
     getFloorCookie() {
       return this.$cookies.get(this.floorCookieName)
     },
     setFloorCookie(value) {
       this.$cookies.set(this.floorCookieName, value, this.floorCookieOptions)
     },
-    floorClicked(event, isIncreased) {
-      this.showModal = true
-    },
+
     closeModal() {
       this.showModal = false
-      this.gameStep = 0
     },
+    closeModalAndMoveGame() {
+      this.closeModal()
+      this.curGame++
+    },
+
     startGame() {
       this.gameStep = 1
     },
     onImgClicked(event, i) {
-      this.$set(this.imgClicked, i, !this.imgClicked[i])
+      this.$set(this.imgClicked, i, true)
+    },
+    onImgLoad() {
+      this.imgLoaded++
+    },
+    async getGame() {
+      const { default: createGame } = await import(
+        `../games/game${this.curGame}.js`
+      )
+      return createGame
+    },
+
+    someMethod(event) {
+      // clientX/Y gives the coordinates relative to the viewport in CSS pixels.
+      console.log('clientX: ' + event.clientX)
+      console.log('clientY: ' + event.clientY)
+
+      // pageX/Y gives the coordinates relative to the <html> element in CSS pixels.
+      console.log('eventX: ' + event.pageX)
+      console.log('eventY: ' + event.pageY)
+
+      // screenX/Y gives the coordinates relative to the screen in device pixels.
+      console.log('screenX: ' + event.screenX)
+      console.log('screenY: ' + event.screenY)
     },
   },
 }
 </script>
 
 <style scoped lang="less">
+.zoomed {
+  transform: scale(4);
+  transform-origin: center bottom;
+  -moz-transform: scale(4);
+  -moz-transform-origin: center bottom;
+  transition: all 0.5s ease;
+}
+
 a {
   display: block;
   margin-left: auto;
@@ -416,9 +529,11 @@ a {
 
   &_disabled {
     pointer-events: none;
+    touch-action: none;
     &:hover {
       transform: none !important;
     }
+    opacity: 0.4;
   }
 
   &-link {
@@ -592,6 +707,19 @@ a {
 
   &__start-img {
     max-height: 100vh;
+  }
+
+  &__tracker {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    display: none;
+  }
+}
+
+.game-tracker {
+  &_visible {
+    display: block;
   }
 }
 

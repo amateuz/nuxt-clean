@@ -9,7 +9,7 @@
 import Vue from 'vue'
 import PhaserGame from 'nuxtjs-phaser/dist/phaserGame.vue'
 
-const getGame = async (config = {}) => {
+const getGame = async () => {
   const { default: createGame } = await import('../games/game2.js')
   return createGame
 }
@@ -25,11 +25,14 @@ export default Vue.extend({
   data() {
     return {
       createGame: undefined,
+      buttonText: 'Click',
     }
   },
   async mounted() {
     this.createGame = await getGame()
-    this.$nextTick(() => setPhaserFocus())
+    this.$nextTick(() => {
+      setPhaserFocus()
+    })
   },
   methods: {
     emitPhaserEvent(eventName) {
