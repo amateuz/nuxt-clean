@@ -6,7 +6,7 @@ const createGame = (config = {}) => {
   var buttons = [];
   var btns = [];
   var btnsSound = [];
-  var startGood = 424;
+  var startGood = 325;
   var endGood = 486;
   var imgs = ['select1', 'select2', 'select3', 'fail_text', 'win_text'];
   var startPos = {
@@ -20,15 +20,14 @@ const createGame = (config = {}) => {
       'header_num_2': { 'x': 157, 'y': 279, 'depth': 0, 'rotation': 0, 'flip': false },
       'header_num_3': { 'x': 182, 'y': 279, 'depth': 0, 'rotation': 0, 'flip': false },
       'header_percent': { 'x': 215, 'y': 279, 'depth': 0, 'rotation': 0, 'flip': false },
-      'btn1': { 'x': 98, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select1' },
-      'btn2': { 'x': 146, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select2' },
-      'btn3': { 'x': 201, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select3' },
-      'btn4': { 'x': 254, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select1' },
-      'btn5': { 'x': 303, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select2' },
+      'btn1': { 'x': 103, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select1' },
+      'btn2': { 'x': 154, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select2' },
+      'btn3': { 'x': 203, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select3' },
+      'btn4': { 'x': 256, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select1' },
+      'btn5': { 'x': 306, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select2' },
       'btn6': { 'x': 356, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select2' },
-      'btn7': { 'x': 411, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select3' },
-      'btn8': { 'x': 464, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select1' }
-
+      'btn7': { 'x': 406, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select3' },
+      'btn8': { 'x': 453, 'y': 645, 'depth': 2, 'rotation': 0, 'flip': false, 'img': 'select1' }
     }
   };
 
@@ -104,9 +103,6 @@ const createGame = (config = {}) => {
       btnsSound.push(that.sound.add('note' + i.toString()));
     }
 
-    startGood = 440 - 110 * startPos.common.scale / 2 * 1.05;
-    endGood = 440 + 110 * startPos.common.scale / 2 * 1.05;
-
     arrange = that.sound.add('arrange');
     wrong = that.sound.add('wrong');
 
@@ -170,7 +166,7 @@ const createGame = (config = {}) => {
   }
 
   function startGame() {
-    back = that.add.image(285, 400, null);
+    back = that.add.image(285, 407, null);
     back.setScale(0.625);
     piano = that.add.image(285, 627.5, null);
     piano.setScale(0.625);
@@ -199,7 +195,7 @@ const createGame = (config = {}) => {
   function createBar() {
     var speed = 110 * 0.625 * 4;
     if (music[musicIdx] > 0) {
-      var bar = that.physics.add.image(96 + 52 * (music[musicIdx] - 1), -50, 'bar');
+      var bar = that.physics.add.image(104 + 50 * (music[musicIdx] - 1), -50, 'bar');
 
       bar.depth = 1;
       bar.state = 'active';
@@ -349,7 +345,7 @@ const createGame = (config = {}) => {
   }
 
   function onBtn(btn) {
-    var oneBars = bars.filter(item => Math.abs(item.x - btn.x) < 10 && item.state == 'active');
+    var oneBars = bars.filter(item => Math.abs(item.x - btn.x) < 10  && item.state == 'active');
 
 
     if (oneBars
