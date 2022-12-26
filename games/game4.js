@@ -5,6 +5,7 @@ const createGame = (config = {}) => {
   var words = []
   var last
   var start
+  var closeBtn;
   var startPos = [
     { x: 212, y: 228 },
     { x: 304, y: 273 },
@@ -152,7 +153,7 @@ const createGame = (config = {}) => {
     closeBtn = that.add.image(530, 70, 'close');
     closeBtn.setDepth(7);
     closeBtn.setInteractive();
-    closeBtn.setScale(startPos.common.scale);
+    closeBtn.setScale(0.625);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       PhaserNuxt.eventEmitter.emit('close');
@@ -322,19 +323,8 @@ const createGame = (config = {}) => {
     var end = that.add.image(291, 375, 'end')
     end.setScale(0.5)
     end.setDepth(5)
-    var restartBtn = that.add.image(291, 404, 'restart')
-    restartBtn.setScale(0.5)
-    restartBtn.setDepth(5)
-    restartBtn.setInteractive()
-    restartBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      restartGame()
-      end.destroy()
-      restartBtn.destroy()
-      exitBtn.destroy()
-      endText.destroy()
-    })
 
-    var exitBtn = that.add.image(320, 657, 'exit')
+    var exitBtn = that.add.image(291, 427, 'exit')
     exitBtn.setScale(0.5)
     exitBtn.setDepth(5)
     exitBtn.setInteractive()
