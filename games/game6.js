@@ -1,6 +1,6 @@
 const createGame = (config = {}) => {
   var gameImgs = ['room', 'avatar', 'items_popup', 'check', 'cloth_1_1', 'cloth_1_2', 'cloth_1_3', 'cloth_2_1', 'cloth_2_2', 'cloth_2_3', 'cloth_3_1', 'cloth_3_2', 'cloth_3_3', 'bubble'];
-
+  var closeBtn;
   var that;
   var startPos = {
     'common': {

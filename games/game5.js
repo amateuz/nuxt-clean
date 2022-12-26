@@ -6,7 +6,7 @@ const createGame = (config = {}) => {
   var chosen;
   var depthPlusBtn;
   var depthMinusBtn;
-
+  var closeBtn;
   var scale = 0.2;
   var parts = [];
 
@@ -54,6 +54,8 @@ const createGame = (config = {}) => {
     ]);
 
     commonMusics.forEach(x => that.load.audio(x, 'common/' + x + '.mp3'));
+
+    that.load.image('close', 'common/close.png')
   }
 
   function isWin() {
@@ -177,7 +179,7 @@ const createGame = (config = {}) => {
     closeBtn = that.add.image(530, 70, 'close');
     closeBtn.setDepth(7);
     closeBtn.setInteractive();
-    closeBtn.setScale(startPos.common.scale);
+    closeBtn.setScale(0.625);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       PhaserNuxt.eventEmitter.emit('close');
