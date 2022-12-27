@@ -32,6 +32,7 @@
     "vue-final-modal": "^2.4.3",
     "vue-grid-layout": "^2.4.0",
     "vue-server-renderer": "^2.7.10",
+    "vue-slick-carousel": "^1.0.6",
     "vue-template-compiler": "^2.7.10",
     "vuex-class": "0.3.2"
   },
@@ -42,6 +43,7 @@
     "@nuxtjs/eslint-config": "^11.0.0",
     "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/google-fonts": "^2.0.0",
+    "@nuxtjs/vuetify": "^1.12.3",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-nuxt": "^4.0.0",

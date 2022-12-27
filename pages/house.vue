@@ -15,7 +15,7 @@
             preload
             placeholder
             class="sber-house__img"
-            src="/house.png"
+            src="/house2.png"
             alt="sber house image"
             @load="onImgLoad"
           />
@@ -31,20 +31,10 @@
             >
               <div class="floor__content">
                 <nuxt-img
-                  v-if="floorNum === 6"
                   preload
                   placeholder
                   class="floor__img"
-                  :src="getFloor1Src"
-                  :alt="`floor ${floorCount - floorNum + 1} img`"
-                  @load="onImgLoad"
-                />
-                <nuxt-img
-                  v-else
-                  preload
-                  placeholder
-                  class="floor__img"
-                  :src="`/floors/floor${floorCount - floorNum + 1}.png`"
+                  :src="getFloorSrc(floorCount - floorNum + 1)"
                   :alt="`floor ${floorCount - floorNum + 1} img`"
                   @load="onImgLoad"
                 />
@@ -144,9 +134,17 @@
                 </template>
                 <template v-if="floorNum === 5">
                   <div
+                    v-if="curGame <= 2"
                     :class="`floor__top top top_${floorCount - floorNum + 1}`"
                   >
+                    <nuxt-img
+                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                      :alt="`top ${floorCount - floorNum + 1} image`"
+                      @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
                     <DialogView
+                      v-if="curGame === 2 && gameStep < 2"
                       :id="floorNum"
                       bottom="102%"
                       right="40%"
@@ -155,25 +153,69 @@
                       dialog-origin="right-bottom"
                       @click="dialogBtnClicked($event, floorNum - 1)"
                     />
-                    <nuxt-img
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
+                    <DialogView
+                      v-else-if="curGame === 2 && gameStep === 2"
+                      :id="9"
+                      bottom="102%"
+                      right="-180%"
+                      :dialogs="dialogs[8].content"
+                      :dialog-num="dialogs[8].timesClicked"
+                      :visible="true"
+                      :visibility-timeout="500"
+                      :hiding-timeout="1100"
                     />
+                  </div>
+                  <div
+                    v-if="gameStep >= 2 && curGame === 2"
+                    class="top top_1_christmas_floor2 no-iteraction"
+                  >
+                    <nuxt-img
+                      src="/tops/top1christmas.png"
+                      alt="top 1 christmas image"
+                    />
+                    <div class="top_1_christmas_floor2__dialog">
+                      <DialogView
+                        v-if="curGame === 2 && gameStep === 2"
+                        :id="10"
+                        :dialogs="dialogs[9].content"
+                        :dialog-num="dialogs[9].timesClicked"
+                        :visible="true"
+                        :visibility-timeout="1600"
+                        :hiding-timeout="2700"
+                        @end="
+                          gameStep = 0
+                          curGame = 3
+                          showModal = true
+                        "
+                      />
+                    </div>
                   </div>
                 </template>
                 <template v-if="floorNum === 6">
                   <div
+                    v-if="curGame === 1"
                     class="floor__top top"
                     :class="[
-                      { [`top_${floorCount - floorNum + 1}`]: gameStep < 2 },
                       {
-                        [`top_${floorCount - floorNum + 1}_christmas`]:
-                          gameStep >= 2,
+                        [`top_${floorCount - floorNum + 1}`]:
+                          gameStep < 2 && curGame === 1,
+                      },
+                      {
+                        [`top_${
+                          floorCount - floorNum + 1
+                        }_christmas no-iteraction`]:
+                          gameStep >= 2 && curGame === 1,
                       },
                     ]"
                   >
+                    <nuxt-img
+                      preload
+                      placeholder
+                      :src="getTopSrc(1)"
+                      :alt="`top ${floorCount - floorNum + 1} image`"
+                      @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
                     <DialogView
                       :id="floorNum"
                       :disabled="showModal"
@@ -192,7 +234,7 @@
                       :dialog-num="dialogs[6].timesClicked"
                       :visible="true"
                       :visibility-timeout="500"
-                      :hiding-timeout="4000"
+                      :hiding-timeout="1100"
                     />
                     <DialogView
                       :id="8"
@@ -202,16 +244,13 @@
                       :dialog-num="dialogs[7].timesClicked"
                       dialog-origin="right-bottom"
                       :visible="true"
-                      :visibility-timeout="4500"
-                      :hiding-timeout="10000"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="getTop1Src"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
+                      :visibility-timeout="1600"
+                      :hiding-timeout="2700"
+                      @end="
+                        gameStep = 0
+                        curGame = 2
+                        showModal = true
+                      "
                     />
                   </div>
                 </template>
@@ -245,7 +284,7 @@
           />
         </div>
       </template>
-      <template v-else-if="curGame === 1">
+      <template v-else-if="curGame === 1 && gameStep < 4">
         <div class="game1">
           <div class="game1__container">
             <template v-if="gameStep === 0">
@@ -319,10 +358,28 @@
                 max-w="160px"
                 max-h="50px"
                 br="35"
-                @click="closeModalAndMoveGame(true)"
+                @click="closeModalAndMoveGame"
               />
             </template>
           </div>
+        </div>
+      </template>
+      <template v-else-if="gameStep === 0">
+        <div class="notice">
+          <nuxt-img class="notice__img" src="/popup-magic.png" />
+          <div>
+            {{ curGame }}
+          </div>
+          <Btn
+            w="37%"
+            h="10%"
+            max-w="160px"
+            max-h="50px"
+            bg="6"
+            br="35"
+            class="notice__btn"
+            @click="magicClosed"
+          />
         </div>
       </template>
       <template v-else>
@@ -357,6 +414,8 @@ export default {
     return {
       createGame: undefined,
       curGame: 1,
+      gameStep: 0,
+
       isLoading: true,
       imgLoaded: 0,
       noticeAnimated: true,
@@ -365,7 +424,6 @@ export default {
       dialogs: dataDialogs,
       showModal: false,
       imgClicked: [false, false, false, false, false],
-      gameStep: 0,
       gameFinished: [false, false, false, false, false, false],
 
       floorCount: 6,
@@ -403,8 +461,8 @@ export default {
   beforeCreate() {},
   created() {
     this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
-    // console.log(this.floorCookieValue);
-    this.curGame = this.floorCookieValue;
+    this.curGame = 1 // this.floorCookieValue
+    this.gameStep = 1
   },
   mounted() {
     const tops = document.getElementsByClassName('top')
@@ -413,20 +471,7 @@ export default {
       top.style.visibility = 'visible'
     })
   },
-  computed: {
-    getFloor1Src() {
-      const christmas = this.gameStep >= 2 ? 'christmas' : ''
-      return `/floors/floor1${christmas}.png`
-    },
-    getTop1Src() {
-      const christmas = this.gameStep >= 2 ? 'christmas' : ''
-      return `/tops/top1${christmas}.png`
-    },
-    getFloor2Src() {
-      const christmas = this.gameStep >= 2 ? 'christmas' : ''
-      return `/floors/floor2${christmas}.png`
-    },
-  },
+  computed: {},
   methods: {
     async dialogBtnClicked(event, floorNum) {
       this.showModal = true
@@ -473,11 +518,16 @@ export default {
     closeModal() {
       this.showModal = false
     },
-    closeModalAndMoveGame(isFloor1 = false) {
+    closeModalAndMoveGame() {
       this.closeModal()
-      this.curGame++
-      if (isFloor1) this.gameStep++
-      this.setFloorCookie(this.curGame);
+      // this.curGame++
+      if (this.curGame >= 3) {
+        this.curGame++
+        this.gameStep = 1
+      } else {
+        this.gameStep++
+      }
+      // this.setFloorCookie(this.curGame)
     },
 
     startGame() {
@@ -501,12 +551,34 @@ export default {
         this.isModalPopupRules = false
       }, 200)
     },
+    magicClosed() {
+      this.showModal = false
+      this.gameStep = 1
+    },
+
+    getTopSrc(num) {
+      const christmas = this.gameStep >= 2 ? 'christmas' : ''
+      return `/tops/top${num}${christmas}.png`
+    },
+    getFloorSrc(num) {
+      const christmas =
+        (this.gameStep >= 2 && this.curGame === num) || this.curGame > num
+          ? 'christmas'
+          : ''
+      return `/floors/floor${num}${christmas}.png`
+    },
   },
 }
 </script>
 
 <style scoped lang="less">
 .no-interaction {
+  cursor: default;
+
+  &:hover {
+    cursor: default;
+  }
+
   pointer-events: none;
   touch-action: none;
 }
@@ -549,8 +621,8 @@ a {
 .house-page {
   background: rgb(161, 183, 255);
   background: no-repeat center center;
-  background-image: url('~static/bgs/house-bg.png');
-  background-image: url('~static/bgs/house-bg.png'),
+  background-image: url('~static/bgs/house-bg2.png');
+  background-image: url('~static/bgs/house-bg2.png'),
     linear-gradient(
       0deg,
       rgba(222, 222, 246, 1) 0%,
@@ -598,7 +670,7 @@ a {
   height: auto;
   max-width: 100%;
   position: absolute;
-  visibility: hidden;
+  // visibility: hidden;
 
   &:hover {
     cursor: pointer;
@@ -619,8 +691,25 @@ a {
       bottom: 0;
       width: 13%;
 
-      pointer-events: none;
-      touch-action: none;
+      &_floor2 {
+        visibility: visible;
+        bottom: 0;
+        z-index: 3;
+        transform: scaleX(-1);
+        height: 66%;
+        left: 30.5%;
+
+        &__dialog {
+          transform: scaleX(-1);
+          position: relative;
+          bottom: 124%;
+          left: -73%;
+        }
+
+        img {
+          max-height: 100%;
+        }
+      }
     }
   }
 

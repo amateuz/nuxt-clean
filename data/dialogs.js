@@ -1,4 +1,5 @@
 export default [
+  // 0
   {
     timesClicked: -1,
     content: [
@@ -14,6 +15,7 @@ export default [
       },
     ],
   },
+  // 1
   {
     timesClicked: -1,
     content: [
@@ -29,6 +31,7 @@ export default [
       },
     ],
   },
+  // 2
   {
     timesClicked: -1,
     content: [
@@ -47,9 +50,13 @@ export default [
       },
     ],
   },
+  // 3
   {
     timesClicked: -1,
     content: [
+      {
+        text: '♫♫♫',
+      },
       {
         text: '*напевает мелодию*',
       },
@@ -65,6 +72,7 @@ export default [
       },
     ],
   },
+  // 4
   {
     timesClicked: -1,
     content: [
@@ -83,6 +91,7 @@ export default [
       },
     ],
   },
+  // 5
   {
     timesClicked: -1,
     content: [
@@ -98,15 +107,35 @@ export default [
       },
     ],
   },
+  // 6
   {
     timesClicked: -1,
     content: [{ text: 'Напоминаю вам, что <br /> скоро Новый год.' }],
   },
+  // 7
   {
     timesClicked: -1,
     content: [
       {
         text: 'А, действительно, <br /> пора подумать <br /> о подарках.',
+      },
+    ],
+  },
+  // 8
+  {
+    timesClicked: -1,
+    content: [
+      {
+        text: 'Хм, а эта схема похожа, <br /> на ёлочку.',
+      },
+    ],
+  },
+  // 9
+  {
+    timesClicked: -1,
+    content: [
+      {
+        text: 'Не хватает только <br /> новогодней мелодии!',
       },
     ],
   },

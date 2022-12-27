@@ -57,7 +57,6 @@ export default {
     { src: '@/plugins/vClickOutside', ssr: false },
     '~/plugins/vue-final-modal.js',
     '~/components/global/init.js',
-    // { src: '~/plugins/vue-grid-layout.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -72,6 +71,7 @@ export default {
     '@nuxtjs/eslint-module',
     'nuxt-gsap-module',
     '@nuxtjs/google-fonts',
+    '@nuxtjs/vuetify',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -95,9 +95,22 @@ export default {
       ignoreOrder: false,
     },
     transpile: ['gsap', 'vue-final-modal'],
+    extend(config, ctx) {
+      config.module.rules.push({
+        test: /\.(ogg|mp3|wav|mpe?g)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
+      })
+    },
   },
 
   server: {
     // host: '0.0.0.0',
+  },
+
+  router: {
+    // base: '/comics2/',
   },
 }

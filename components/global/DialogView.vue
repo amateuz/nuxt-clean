@@ -93,6 +93,10 @@ export default {
       type: Number,
       default: 0,
     },
+    bubbleDuration: {
+      type: Number,
+      default: 300,
+    },
   },
   data() {
     return {
@@ -103,6 +107,7 @@ export default {
     }
   },
   created() {
+    console.log(`dialog ${this.id} created!`)
     if (this.visibilityTimeout > 0) {
       this.isDisabled = true
       setTimeout(() => {
@@ -110,8 +115,12 @@ export default {
       }, this.visibilityTimeout)
     }
     if (this.hidingTimeout > 0) {
+      console.log(`hiding timeout ${this.hidingTimeout}`)
       setTimeout(() => {
         this.isDisabled = true
+        setTimeout(() => {
+          this.emitDialogEnd()
+        }, this.bubbleDuration)
       }, this.hidingTimeout)
     }
   },
@@ -160,7 +169,7 @@ export default {
           this.dialogText = this.getText
           this.isVisible = true
         },
-        this.isVisible ? 300 : 0
+        this.isVisible ? this.bubbleDuration : 0
       )
       this.isVisible = false
     },
@@ -168,6 +177,9 @@ export default {
   methods: {
     emitClick() {
       this.$emit('click')
+    },
+    emitDialogEnd() {
+      this.$emit('end')
     },
     closeDialog(event) {
       if (!this.id) return
