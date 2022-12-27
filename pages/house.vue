@@ -28,6 +28,7 @@
                   [`floor_disabled`]: curGame < floorCount - floorNum + 1,
                 },
               ]"
+              :ref="`floor${floorCount - floorNum + 1}`"
             >
               <div class="floor__content">
                 <nuxt-img
@@ -412,6 +413,7 @@ export default {
   components: { PhaserGame },
   data() {
     return {
+      audio: null,
       createGame: undefined,
       curGame: 1,
       gameStep: 0,
@@ -464,11 +466,20 @@ export default {
     this.curGame = 1 // this.floorCookieValue
     this.gameStep = 1
   },
+  beforeDestroy() {
+    if (this.audio) this.audio.pause()
+  },
   mounted() {
     const tops = document.getElementsByClassName('top')
 
     Array.prototype.forEach.call(tops, function (top) {
       top.style.visibility = 'visible'
+    })
+
+    if (!this.audio) this.playBackgroundSound()
+
+    this.$nextTick(() => {
+      this.scrollToElement()
     })
   },
   computed: {},
@@ -567,6 +578,29 @@ export default {
           : ''
       return `/floors/floor${num}${christmas}.png`
     },
+
+    scrollToElement() {
+      setTimeout(() => {
+        const el = this.$refs.floor1[0]
+
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 500)
+    },
+
+    playBackgroundSound() {
+      this.audio = new Audio('/sounds/sbergrinch_main_loop.mp3')
+      this.audio.addEventListener(
+        'ended',
+        function () {
+          this.currentTime = 0
+          this.play()
+        },
+        false
+      )
+      this.audio.play()
+    },
   },
 }
 </script>
@@ -621,8 +655,10 @@ a {
 .house-page {
   background: rgb(161, 183, 255);
   background: no-repeat center center;
-  background-image: url('~static/bgs/house-bg2.png');
-  background-image: url('~static/bgs/house-bg2.png'),
+  background-image: url('~static/bgs/snechok_8.gif'),
+    url('~static/bgs/house-bg2.png');
+  background-image: url('~static/bgs/snechok_8.gif'),
+    url('~static/bgs/house-bg2.png'),
     linear-gradient(
       0deg,
       rgba(222, 222, 246, 1) 0%,

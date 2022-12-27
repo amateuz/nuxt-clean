@@ -1,372 +1,351 @@
 <template>
-  <section class="comics">
-    <div class="frameIntro">
-      <div class="captionWrapper">
-        <span class="caption">{{`Свет гирлянд сверкает всюду,\nЗакружился хоровод,\nГород радуется чуду.\nВ Сбер приходит Новый год!`}}</span>
-      </div>
+  <div>
+    <section class="carousel-section">
+      <template>
+        <div class="container">
+          <div class="carousel-container">
+            <VueSlickCarousel
+              v-show="$vuetify.breakpoint.mdAndUp"
+              class="carousel"
+              v-bind="settings"
+              :arrows="true"
+              @beforeChange="onChange"
+            >
+              <div class="carousel__slide slide">
+                <div class="slide__content">
+                  <nuxt-img src="/carousel/slide1.png" />
+                </div>
+              </div>
+              <div class="carousel__slide slide">
+                <div class="slide__content">
+                  <nuxt-img src="/carousel/slide2.png" />
+                </div>
+              </div>
 
-      <div class="imgWrapper imgWrapperElkaZoom">
-        <nuxt-img class="img imgElkaZoom" src="comics1/elka-zoom.png" />
-      </div>
-      <div class="imgWrapper imgWrapperElka">
-        <nuxt-img class="img imgElka" src="comics1/elka.gif" />
-      </div>
-    </div>
-
-    <div class="frameSadParty">
-      <div class="imgLayout">
-        <div class="imgWrapper">
-          <nuxt-img class="img" src="comics1/sad-party.gif" />
+              <template #prevArrow>
+                <nuxt-img
+                  @click="playTurnSound"
+                  src="/btns/prev-btn.png"
+                  class="carousel__arrow carousel__arrow_prev"
+                />
+              </template>
+              <template #nextArrow>
+                <nuxt-img
+                  @click="playTurnSound"
+                  src="/btns/next-btn.png"
+                  class="carousel__arrow carousel__arrow_next"
+                />
+              </template>
+            </VueSlickCarousel>
+            <VueSlickCarousel
+              v-show="$vuetify.breakpoint.smAndDown"
+              class="carousel carousel_mobile"
+              v-bind="settings"
+              :arrows="true"
+              @beforeChange="onChange"
+            >
+              <div class="carousel__slide slide">
+                <div class="slide__content">
+                  <nuxt-img src="/carousel/mobile/slide1.png" />
+                </div>
+              </div>
+              <div class="carousel__slide slide">
+                <div class="slide__content">
+                  <nuxt-img src="/carousel/mobile/slide2.png" />
+                </div>
+              </div>
+              <div class="carousel__slide slide">
+                <div class="slide__content">
+                  <nuxt-img src="/carousel/mobile/slide3.png" />
+                </div>
+              </div>
+              <div class="carousel__slide slide">
+                <div class="slide__content">
+                  <nuxt-img src="/carousel/mobile/slide4.png" />
+                </div>
+              </div>
+              <template #prevArrow>
+                <nuxt-img
+                  @click="playTurnSound"
+                  src="/btns/prev-btn.png"
+                  class="carousel__arrow carousel__arrow_prev"
+                />
+              </template>
+              <template #nextArrow>
+                <nuxt-img
+                  @click="playTurnSound"
+                  src="/btns/next-btn.png"
+                  class="carousel__arrow carousel__arrow_next"
+                />
+              </template>
+            </VueSlickCarousel>
+            <NuxtLink
+              @click.native="playBtnClick"
+              class="carousel-section__btn"
+              :class="[
+                { 'carousel-section__btn_green': btnGreen },
+                {
+                  'carousel-section__btn_red': !btnGreen,
+                },
+              ]"
+              to="/house"
+            />
+          </div>
         </div>
-      </div>
-
-      <span class="caption">{{`Но не слышно там веселья,\nСмеха, праздных голосов.\nВ вихре снеговой метели\nВсе забыли про него!`}}</span>
-    </div>
-
-    <div class="frameCrampus">
-      <span class="caption">{{`Но откуда наважденье?\nЧьих же дело это рук?\nПортит людям настроение —\nКрампус — лиходейный дух.`}}</span>
-
-      <div class="imgLayout">
-        <div class="imgWrapper">
-          <nuxt-img class="img" src="comics1/crampus.gif" />
-        </div>
-      </div>
-    </div>
-
-    <div class="frameHero">
-      <nuxt-img class="img" src="comics1/hero.gif" />
-
-      <span class="caption">{{`Эту подлую затею\nЖдет безрадостный исход.\nВместе мы спугнем злодея\nИ вернем в Сбер Новый год!`}}</span>
-    </div>
-
-    <div class="startGame">
-      <NuxtLink class="startGameBtn" to="/house" />
-    </div>
-  </section>
+      </template>
+    </section>
+  </div>
 </template>
 
 <script>
+import VueSlickCarousel from 'vue-slick-carousel'
+import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+
 export default {
-  name: 'Comics',
+  name: 'MyComponent',
+  components: { VueSlickCarousel },
+  computed: {
+    getVuetifyBreakpoint() {
+      return this.$vuetify.breakpoint.name
+    },
+  },
+  data() {
+    return {
+      carouselItemNum: 0,
+      krampusMobile: [],
+      krampus: [],
+      audio: null,
+      btnGreen: true,
+      settings: {
+        dots: false,
+        infinite: false,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        fade: true,
+      },
+    }
+  },
+  methods: {
+    onChange(oldSlideIndex, newSlideIndex) {
+      this.carouselItemNum = newSlideIndex
+      this.krampus.forEach((k) => {
+        k.pause()
+        k.currentTime = 0
+      })
+      this.krampusMobile.forEach((k) => {
+        k.pause()
+        k.currentTime = 0
+      })
+
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        this.btnGreen = newSlideIndex !== 1
+        this.krampus[newSlideIndex].play()
+      } else if (this.$vuetify.breakpoint.smAndDown) {
+        this.btnGreen = newSlideIndex !== 3
+        this.krampusMobile[newSlideIndex].play()
+      }
+    },
+    playTurnSound() {
+      const audio = new Audio('/sounds/pageTurn.mp3')
+      audio.play()
+    },
+    playBackgroundSound() {
+      this.audio = new Audio('/sounds/sbergrinch_main_loop.mp3')
+      this.audio.addEventListener(
+        'ended',
+        function () {
+          this.currentTime = 0
+          this.play()
+        },
+        false
+      )
+      this.audio.play()
+    },
+    playBtnClick() {
+      const audio = new Audio('/sounds/button_common.mp3')
+      audio.play()
+    },
+  },
+  mounted() {
+    if (!this.audio) this.playBackgroundSound()
+    this.$nextTick(() => {
+      for (let i = 1; i <= 4; i++) {
+        if (i <= 2) this.krampus.push(new Audio(`/sounds/Krampus${i}.mp3`))
+        this.krampusMobile.push(new Audio(`/sounds/Krampus${i}_mobile.mp3`))
+      }
+
+      if (this.$vuetify.breakpoint.smAndDown) this.krampusMobile[0].play()
+      else this.krampus[0].play()
+    })
+  },
+  beforeDestroy() {
+    if (this.audio) this.audio.pause()
+  },
+  watch: {
+    /* getVuetifyBreakpoint(oldValue, newValue) {
+      if (
+        (['xs', 'sm'].includes(oldValue) && ['xs', 'sm'].includes(newValue)) ||
+        (['md', 'lg', 'xl'].includes(oldValue) &&
+          ['md', 'lg', 'xl'].includes(newValue))
+      )
+        return
+
+      if (['xs', 'sm'].includes(newValue)) {
+        this.krampus.forEach((k) => {
+          k.pause()
+          k.currentTime = 0
+        })
+
+        this.krampusMobile[this.carouselItemNum].play()
+      } else {
+        this.krampusMobile.forEach((k) => {
+          k.pause()
+          k.currentTime = 0
+        })
+
+        if (this.carouselItemNum < 2)
+          this.krampusMobile[this.carouselItemNum].play()
+      }
+    }, */
+  },
 }
 </script>
 
 <style scoped lang="less">
-.comics {
+.preload {
+  display: none;
+
+  img {
+    width: 0;
+    height: 0;
+  }
+}
+.carousel-section {
+  background: url('@/static/bgs/start-bg-2.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
+  min-height: 100vh;
+
   --scale: 1;
 
-  position: relative;
-  z-index: 0;
-  display: grid;
-  justify-content: center;
-  justify-items: center;
-  padding: calc(50px * var(--scale));
-  overflow-x: hidden;
-  background-color: #000;
-  color: #fff;
-
   @media (max-width: 1600px) {
-    --scale: 0.85;
+    --scale: 1;
   }
 
   @media (max-width: 1280px) {
-    --scale: 0.6;
+    --scale: 0.85;
   }
 
-  @media (max-width: 900px) {
-    --scale: 0.28;
-  }
-}
-
-.caption {
-  font-size: calc(34px * var(--scale));
-  font-weight: 600;
-  line-height: calc(44px * var(--scale));
-  letter-spacing: -0.02em;
-  white-space: pre-wrap;
-
-  @media (max-width: 900px) {
-    font-size: 16px;
-    line-height: 21px;
-  }
-}
-
-.frameIntro {
-  --img-bottom-offset: 45px;
-
-  position: relative;
-  z-index: 0;
-  display: grid;
-  grid-template-rows: 1fr calc((712px - var(--img-bottom-offset)) * var(--scale));
-  align-items: center;
-  justify-items: center;
-  width: max-content;
-
-  .captionWrapper {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    width: calc(1037px * var(--scale));
-    height: calc(612px * var(--scale));
-    grid-row: 1;
-    grid-column: 1/3;
-    background: url('~static/comics1/intro.png') no-repeat center center;
-    background-size: 100% 100%;
+  @media (max-width: 950px) {
+    --scale: 0.75;
   }
 
-  .caption {
-    font-size: calc(40px * var(--scale));
-    line-height: calc(51px * var(--scale));
-    text-align: center;
+  @media (max-width: 750px) {
+    --scale: 0.65;
   }
 
-  .imgWrapper {
-    position: relative;
-    height: 100%;
-  }
-
-  .imgWrapperElka {
-    width: calc(496px * var(--scale));
-  }
-
-  .imgWrapperElkaZoom {
-    width: calc(594px * var(--scale));
-  }
-
-  .img {
-    position: absolute;
-  }
-
-  .imgElka {
-    bottom: 0;
-    height: calc(712px * var(--scale));
-  }
-
-  .imgElkaZoom {
-    bottom: calc(5px * var(--scale));
-    height: calc(678px * var(--scale));
-  }
-
-  @media (max-width: 900px) {
-    .caption {
-      font-size: 16px;
-      line-height: 21px;
+  &__btn {
+    &_green {
+      background-image: url('~static/btns/btn1-text.png');
     }
-  }
-}
+    &_red {
+      background-image: url('~static/btns/btn7-text.png');
+    }
 
-.frameSadParty {
-  position: relative;
-  z-index: 0;
-  display: grid;
-  grid-template-columns: 1fr max-content;
-  column-gap: calc(40px * var(--scale));
-  width: calc(1124px * var(--scale));
-  height: calc(672px * var(--scale));
-  margin-top: calc(27px * var(--scale));
-
-  .imgLayout {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .imgWrapper {
-    position: absolute;
-    right: 0;
-    width: calc(768px * var(--scale));
-    height: 100%;
-  }
-
-  .img {
+    background: no-repeat center;
+    background-size: cover;
     display: block;
-    width: 100%;
-    height: 100%;
-  }
+    width: calc(238.33px * var(--scale));
+    height: calc(75px * var(--scale));
+    box-shadow: 0 3.33333px 0 #56171f,
+      inset 0 1.66667px 0 rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    transition: transform 0.1s ease;
+    transform-origin: center center;
 
-  .caption {
-    margin-top: calc(180px * var(--scale));
-    text-align: left;
-  }
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    width: 100%;
-    height: max-content;
-    margin-top: 40px;
-
-    .caption {
-      grid-row: 1;
-      margin: 0;
-      margin-bottom: 40px;
-      text-align: center;
-    }
-
-    .imgLayout {
-      position: static;
-      width: 306px;
-      height: 241px;
-    }
-
-    .imgWrapper {
-      position: static;
-      width: 100%;
-      height: 100%;
-    }
-
-    .img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
-
-.frameCrampus {
-  position: relative;
-  z-index: 0;
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  column-gap: calc(90px * var(--scale));
-  width: calc(1224px * var(--scale));
-  height: calc(630px * var(--scale));
-
-  .imgLayout {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .imgWrapper {
     position: absolute;
-    left: 0;
-    top: calc(-110px * var(--scale));
-    width: calc(569px * var(--scale));
-    height: calc(739px * var(--scale));
-  }
+    bottom: -7%;
+    left: 50%;
+    transform: translateX(-50%);
 
-  .img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .caption {
-    margin-top: calc(150px * var(--scale));
-    text-align: left;
-  }
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    justify-items: center;
-    width: 100%;
-    height: max-content;
-    margin-bottom: 40px;
-
-    .imgLayout {
-      position: static;
-      width: 228px;
-      height: 273px;
+    &:hover {
+      filter: brightness(105%);
+      transform: scale(1.05) translateX(-48%);
     }
 
-    .imgWrapper {
-      position: static;
-      width: 100%;
-      height: 100%;
-    }
-
-    .caption {
-      margin: 40px 0;
-      text-align: center;
+    &:active {
+      box-shadow: none;
+      transform: translate(-50%, 2px);
     }
   }
 }
+.container {
+  max-width: 1440px;
+  padding: 0 !important;
+}
+.carousel-container {
+  position: relative;
+}
+.carousel {
+  @r: .carousel;
 
-.frameHero {
-  display: grid;
-  align-items: center;
+  max-height: 100vh;
 
-  .img {
-    width: calc(1140px * var(--scale));
-    height: calc(656px * var(--scale));
+  img {
+    max-height: 85vh;
   }
 
-  .caption {
-    margin-top: calc(86px * var(--scale));
-    text-align: center;
+  &_mobile {
+    @{r}__arrow {
+      top: 74%;
+
+      &_prev {
+        left: 38%;
+      }
+
+      &_next {
+        right: 38%;
+      }
+    }
   }
 
-  @media (max-width: 900px) {
-    .caption {
-      grid-row: 1;
-      margin-bottom: 40px;
-      text-align: center;
+  &__arrow {
+    width: calc(61px * var(--scale));
+    height: calc(71px * var(--scale));
+    z-index: 10;
+    transform: translate(0, -50%);
+    &:hover {
+      filter: brightness(105%);
+    }
+    &:active {
+      transform: translate(0, calc(-50% + 2px));
+    }
+    transition: translate 0.05s ease;
+
+    &_next {
+      right: 5%;
     }
 
-    .img {
-      width: 320px;
-      height: 184px;
+    &_prev {
+      left: 5%;
     }
   }
-}
 
-.startGame {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: calc(540px * var(--scale));
-  height: calc(232px * var(--scale));
-  margin-top: calc(36px * var(--scale));
-  background: url('~static/comics1/start-game.png') no-repeat center center;
-  background-size: contain;
+  .slide {
+    width: auto;
 
+    &__content {
+      max-height: 100%;
+      margin-left: auto;
+      margin-right: auto;
 
-  @media (max-width: 900px) {
-    width: 267px;
-    height: 114px;
-    margin-top: 40px;
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
   }
-}
-
-.startGameBtn {
-  background: url('~static/btns/btn2-text.png') #1d9a89 no-repeat;
-  background-size: contain;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: calc(281px * var(--scale));
-  height: calc(81px * var(--scale));
-  box-shadow: 0 3.60389px 0 #56171f,
-    inset 0 1.80194px 0 rgba(255, 255, 255, 0.25);
-  border-radius: 20px;
-  transition: transform 0.05s ease;
-
-  &:hover {
-    filter: brightness(110%);
-  }
-
-  &:active {
-    box-shadow: none;
-    transform: translate(0, 2px);
-  }
-
-  @media (max-width: 900px) {
-    width: 139px;
-    height: 40px;
-  }
-}
-
-.bubble {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border: 2px solid white;
-  width: 1032px;
-  height: 612px;
-
-  shape-outside: polygon(0 0, 100% 0, 100% 100%, 30% 100%);
 }
 </style>
