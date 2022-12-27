@@ -30,6 +30,7 @@
     "vue": "^2.7.10",
     "vue-class-component": "^7.1.0",
     "vue-final-modal": "^2.4.3",
+    "vue-grid-layout": "^2.4.0",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
     "vuex-class": "0.3.2"

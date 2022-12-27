@@ -322,7 +322,7 @@ export default {
   background: url('~static/comics1/start-game.png') no-repeat center center;
   background-size: contain;
 
-  
+
   @media (max-width: 900px) {
     width: 267px;
     height: 114px;

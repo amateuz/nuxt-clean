@@ -35,7 +35,7 @@
                   preload
                   placeholder
                   class="floor__img"
-                  :src="`/floors/floor${floorCount - floorNum + 1}.png`"
+                  :src="getFloor1Src"
                   :alt="`floor ${floorCount - floorNum + 1} img`"
                   @load="onImgLoad"
                 />
@@ -165,7 +165,14 @@
                 </template>
                 <template v-if="floorNum === 6">
                   <div
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    class="floor__top top"
+                    :class="[
+                      { [`top_${floorCount - floorNum + 1}`]: gameStep < 2 },
+                      {
+                        [`top_${floorCount - floorNum + 1}_christmas`]:
+                          gameStep >= 2,
+                      },
+                    ]"
                   >
                     <DialogView
                       :id="floorNum"
@@ -177,10 +184,31 @@
                       dialog-origin="right-bottom"
                       @click="dialogBtnClicked($event, floorNum - 1)"
                     />
+                    <DialogView
+                      :id="7"
+                      v-if="gameStep === 3"
+                      class="top__dialog_clock"
+                      :dialogs="dialogs[6].content"
+                      :dialog-num="dialogs[6].timesClicked"
+                      :visible="true"
+                      :visibility-timeout="500"
+                      :hiding-timeout="4000"
+                    />
+                    <DialogView
+                      :id="8"
+                      v-if="gameStep === 3"
+                      class="top__dialog_top6_christmas"
+                      :dialogs="dialogs[7].content"
+                      :dialog-num="dialogs[7].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visible="true"
+                      :visibility-timeout="4500"
+                      :hiding-timeout="10000"
+                    />
                     <nuxt-img
                       preload
                       placeholder
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                      :src="getTop1Src"
                       :alt="`top ${floorCount - floorNum + 1} image`"
                       @click.prevent="runDialog($event, floorNum - 1)"
                       @load="onImgLoad"
@@ -197,9 +225,12 @@
       v-model="showModal"
       classes="modal-container"
       content-class="modal-content"
-      @closed="closeModal"
+      @closed="
+        closeModal()
+        isModalPopupRules = false
+      "
     >
-      <template v-if="popupRules">
+      <template v-if="isModalPopupRules">
         <div class="notice">
           <nuxt-img class="notice__img" src="/popup-rules.png" />
           <Btn
@@ -216,84 +247,81 @@
       </template>
       <template v-else-if="curGame === 1">
         <div class="game1">
-          <div v-if="gameStep === 0" class="game1__start-container">
-            <!--              <Btn-->
-            <!--                class="game1__close-btn"-->
-            <!--                w="40px"-->
-            <!--                h="40px"-->
-            <!--                max-w="40px"-->
-            <!--                max-h="40px"-->
-            <!--                @click.native="closeModal"-->
-            <!--              />-->
-            <nuxt-img class="game1__start-img" src="/game1/game1-start.png" />
-            <Btn
-              class="game1__start-btn"
-              bg="3"
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              br="35"
-              @click="startGame"
-            />
-          </div>
-          <div v-else-if="gameStep === 1" class="game1__game-container">
-            <template v-for="i in 5">
-              <nuxt-img
-                v-if="!imgClicked[i - 1]"
-                preload
-                :key="i"
-                :class="`game1__item game1__item_${i}`"
-                :src="`/game1/item${i - 1}-ph.png`"
-                @click.native="onImgClicked($event, i - 1)"
+          <div class="game1__container">
+            <template v-if="gameStep === 0">
+              <Btn
+                class="game1__close-btn"
+                w="40px"
+                h="40px"
+                max-w="40px"
+                max-h="40px"
+                @click.native="closeModal"
               />
-              <nuxt-img
-                v-else
-                preload
-                :key="i + 10"
-                :class="`game1__item game1__item_${i}`"
-                :src="`/game1/item${i - 1}.png`"
-                @click.native="onImgClicked($event, i - 1)"
-              />
-              <nuxt-img
-                preload
-                :key="i + 20"
-                :src="`game1/tracker${i - 1}.png`"
-                class="game1__tracker game-tracker"
-                :class="{
-                  'game-tracker_visible':
-                    imgClicked.filter((x) => x).length === i - 1,
-                }"
+              <nuxt-img class="game1__img" src="/game1/game1-start.png" />
+              <Btn
+                class="game1__btn"
+                bg="3"
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                br="35"
+                @click="startGame"
               />
             </template>
-            <nuxt-img
-              preload
-              class="game1__tracker game-tracker"
-              :class="{ 'game-tracker_visible': imgClicked.every((x) => x) }"
-              src="/game1/tracker5.png"
-            />
-            <nuxt-img class="game1__floor" src="/floors/floor1.png" />
-          </div>
-          <div v-else-if="gameStep === 2" class="game1__finish-container">
-            <!--              <Btn-->
-            <!--                class="game1__close-btn"-->
-            <!--                w="40px"-->
-            <!--                h="40px"-->
-            <!--                max-w="40px"-->
-            <!--                max-h="40px"-->
-            <!--                @click.native="closeModal"-->
-            <!--              />-->
-            <nuxt-img class="game1__start-img" src="/game1/game1-finish.png" />
-            <Btn
-              class="game1__start-btn"
-              bg="4"
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              br="35"
-              @click="closeModalAndMoveGame"
-            />
+            <template v-else-if="gameStep === 1">
+              <template v-for="i in 5">
+                <nuxt-img
+                  v-if="!imgClicked[i - 1]"
+                  preload
+                  :key="i"
+                  :class="[`game1__item game1__item_${i}`]"
+                  :src="`/game1/items/item${i}out.png`"
+                  @click.native="onImgClicked($event, i - 1)"
+                />
+                <nuxt-img
+                  v-else
+                  preload
+                  :key="i + 10"
+                  :class="[
+                    `game1__item game1__item_${i}`,
+                    { 'no-interaction': i === 1 },
+                  ]"
+                  :src="`/game1/items/item${i}.png`"
+                  @click.native="onImgClicked($event, i - 1)"
+                />
+                <nuxt-img
+                  preload
+                  :key="i + 20"
+                  :src="`game1/tracker${i - 1}.png`"
+                  class="game1__tracker game-tracker"
+                  :class="{
+                    'game-tracker_visible':
+                      imgClicked.filter((x) => x).length === i - 1,
+                  }"
+                />
+              </template>
+              <nuxt-img
+                preload
+                class="game1__tracker game-tracker"
+                :class="{ 'game-tracker_visible': imgClicked.every((x) => x) }"
+                src="/game1/tracker5.png"
+              />
+              <nuxt-img class="game1__floor" src="/floors/floor1.png" />
+            </template>
+            <template v-else-if="gameStep === 2">
+              <nuxt-img class="game1__img" src="/game1/game1-finish.png" />
+              <Btn
+                class="game1__btn"
+                bg="4"
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                br="35"
+                @click="closeModalAndMoveGame(true)"
+              />
+            </template>
           </div>
         </div>
       </template>
@@ -306,7 +334,7 @@
       :class="{ swing: noticeAnimated }"
       @click="
         noticeAnimated = false
-        popupRules = true
+        isModalPopupRules = true
         showModal = true
       "
     />
@@ -332,7 +360,7 @@ export default {
       isLoading: true,
       imgLoaded: 0,
       noticeAnimated: true,
-      popupRules: false,
+      isModalPopupRules: false,
 
       dialogs: dataDialogs,
       showModal: false,
@@ -367,7 +395,7 @@ export default {
         if (newValue.every((x) => x)) {
           setTimeout(() => {
             this.gameStep = 2
-          }, 1000)
+          }, 800)
         }
       },
     },
@@ -375,6 +403,27 @@ export default {
   beforeCreate() {},
   created() {
     this.floorCookieValue = +this.getFloorCookie(this.floorCookieName)
+  },
+  mounted() {
+    const tops = document.getElementsByClassName('top')
+
+    Array.prototype.forEach.call(tops, function (top) {
+      top.style.visibility = 'visible'
+    })
+  },
+  computed: {
+    getFloor1Src() {
+      const christmas = this.gameStep >= 2 ? 'christmas' : ''
+      return `/floors/floor1${christmas}.png`
+    },
+    getTop1Src() {
+      const christmas = this.gameStep >= 2 ? 'christmas' : ''
+      return `/tops/top1${christmas}.png`
+    },
+    getFloor2Src() {
+      const christmas = this.gameStep >= 2 ? 'christmas' : ''
+      return `/floors/floor2${christmas}.png`
+    },
   },
   methods: {
     async dialogBtnClicked(event, floorNum) {
@@ -387,6 +436,7 @@ export default {
           this.$phaser.eventEmitter.addListener(
             'exit',
             () => {
+              this.createGame = null
               this.closeModalAndMoveGame()
             },
             this
@@ -421,9 +471,10 @@ export default {
     closeModal() {
       this.showModal = false
     },
-    closeModalAndMoveGame() {
+    closeModalAndMoveGame(isFloor1 = false) {
       this.closeModal()
       this.curGame++
+      if (isFloor1) this.gameStep++
     },
 
     startGame() {
@@ -444,7 +495,7 @@ export default {
     noticeClosed() {
       this.showModal = false
       setTimeout(() => {
-        this.popupRules = false
+        this.isModalPopupRules = false
       }, 200)
     },
   },
@@ -452,6 +503,11 @@ export default {
 </script>
 
 <style scoped lang="less">
+.no-interaction {
+  pointer-events: none;
+  touch-action: none;
+}
+
 .zoomed {
   transform: scale(4);
   transform-origin: center bottom;
@@ -501,7 +557,7 @@ a {
   background-size: auto 100%;
 
   &__container_blur-content {
-    filter: blur(5px);
+    filter: blur(10px);
   }
 
   &__house {
@@ -539,6 +595,7 @@ a {
   height: auto;
   max-width: 100%;
   position: absolute;
+  visibility: hidden;
 
   &:hover {
     cursor: pointer;
@@ -553,6 +610,15 @@ a {
     left: 25.3%;
     bottom: 0;
     width: 13%;
+
+    &_christmas {
+      left: 38.3%;
+      bottom: 0;
+      width: 13%;
+
+      pointer-events: none;
+      touch-action: none;
+    }
   }
 
   &_2 {
@@ -575,14 +641,24 @@ a {
 
   &_5 {
     right: 24%;
-    bottom: 2.5%;
+    bottom: 2%;
     width: 10.1%;
   }
 
   &_6 {
     right: 15%;
-    bottom: -1%;
+    bottom: -3%;
     width: 6%;
+  }
+
+  &__dialog_clock {
+    left: -112%;
+    top: -37%;
+  }
+
+  &__dialog_top6_christmas {
+    top: -30%;
+    left: -55%;
   }
 }
 
@@ -681,7 +757,7 @@ a {
     right: 27%;
   }
 
-  &__game-container {
+  &__container {
     position: relative;
   }
 
@@ -691,21 +767,16 @@ a {
 
     &_1 {
       display: block;
-      bottom: 3.1%;
-      right: 2.7%;
-      height: 64%;
+      bottom: 4.55%;
+      right: 0.2%;
+      height: 74.6%;
       width: auto;
       z-index: 2;
-
-      bottom: 3.55%;
-      right: 2.6%;
-      height: 64.6%;
-      width: auto;
     }
 
     &_2 {
       display: block;
-      top: 21.7%;
+      top: 21.2%;
       left: 22.4%;
       height: 7.6%;
       width: auto;
@@ -713,12 +784,8 @@ a {
 
     &_3 {
       display: block;
-      bottom: 26.8%;
-      left: 13.6%;
-      height: 10.5%;
-      width: auto;
 
-      bottom: 26.6%;
+      bottom: 26%;
       left: 13.6%;
       height: 10.8%;
       width: auto;
@@ -726,13 +793,9 @@ a {
 
     &_4 {
       display: block;
-      right: 35.6%;
-      top: 33%;
-      height: 3.4%;
-      width: auto;
 
       right: 35.6%;
-      top: 32.9%;
+      top: 32.5%;
       height: 3.6%;
       width: auto;
     }
@@ -754,11 +817,7 @@ a {
     height: 65%;
   }
 
-  &__start-container {
-    position: relative;
-  }
-
-  &__start-btn {
+  &__btn {
     position: absolute;
     bottom: 35%;
     left: 50%;
@@ -769,7 +828,7 @@ a {
     }
   }
 
-  &__start-img {
+  &__img {
     max-height: 100vh;
   }
 
@@ -779,13 +838,15 @@ a {
     left: 3%;
     width: 14%;
     height: auto;
-    display: none;
+    // display: none;
+    z-index: 2;
   }
 }
 
 .game-tracker {
   &_visible {
-    display: block;
+    // display: block;
+    z-index: 3;
   }
 }
 

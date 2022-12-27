@@ -18,9 +18,6 @@ export default [
     timesClicked: -1,
     content: [
       {
-        text: 'Мастер оф <br /> паппетс...',
-      },
-      {
         text: 'Скоро же <br /> совещание...',
       },
       {
@@ -98,6 +95,18 @@ export default [
           text: 'Играть',
           link: 'modal',
         },
+      },
+    ],
+  },
+  {
+    timesClicked: -1,
+    content: [{ text: 'Напоминаю вам, что <br /> скоро Новый год.' }],
+  },
+  {
+    timesClicked: -1,
+    content: [
+      {
+        text: 'А, действительно, <br /> пора подумать <br /> о подарках.',
       },
     ],
   },

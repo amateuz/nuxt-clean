@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'sber-games',
+    title: 'Новогодняя игра блока Т',
     htmlAttrs: {
       lang: 'en',
     },
@@ -11,7 +11,7 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
   },
 
   browserslist: [
@@ -55,8 +55,9 @@ export default {
   plugins: [
     { src: 'node_modules/nuxtjs-phaser', mode: 'client' },
     { src: '@/plugins/vClickOutside', ssr: false },
-    '~plugins/vue-final-modal.js',
+    '~/plugins/vue-final-modal.js',
     '~/components/global/init.js',
+    // { src: '~/plugins/vue-grid-layout.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

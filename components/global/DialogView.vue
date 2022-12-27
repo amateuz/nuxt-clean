@@ -4,7 +4,7 @@
     class="dialog"
     :class="{
       dialog_absolute: absolute,
-      dialog_hidden: !isVisible || disabled,
+      dialog_hidden: !isVisible || isDisabled || disabled,
       [`origin_${dialogOrigin}`]: true,
     }"
     :style="getStyle"
@@ -85,13 +85,34 @@ export default {
       type: String,
       default: 'left-bottom',
     },
+    visibilityTimeout: {
+      type: Number,
+      default: 0,
+    },
+    hidingTimeout: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
-      isFirstOpen: true,
+      isDisabled: false,
       dialogNumber: this.dialogNum,
       dialogText: this.dialogs[0].text,
       isVisible: this.visible,
+    }
+  },
+  created() {
+    if (this.visibilityTimeout > 0) {
+      this.isDisabled = true
+      setTimeout(() => {
+        this.isDisabled = false
+      }, this.visibilityTimeout)
+    }
+    if (this.hidingTimeout > 0) {
+      setTimeout(() => {
+        this.isDisabled = true
+      }, this.hidingTimeout)
     }
   },
   computed: {
@@ -149,6 +170,7 @@ export default {
       this.$emit('click')
     },
     closeDialog(event) {
+      if (!this.id) return
       if (!event.target.classList.contains(`top-${this.id}`)) {
         this.isVisible = false
       }
