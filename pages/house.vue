@@ -402,7 +402,9 @@ export default {
   },
   beforeCreate() {},
   created() {
-    this.floorCookieValue = +this.getFloorCookie(this.floorCookieName)
+    this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
+    // console.log(this.floorCookieValue);
+    this.curGame = this.floorCookieValue;
   },
   mounted() {
     const tops = document.getElementsByClassName('top')
@@ -462,7 +464,7 @@ export default {
     },
 
     getFloorCookie() {
-      return this.$cookies.get(this.floorCookieName)
+      return this.$cookies.get(this.floorCookieName) ?? 1
     },
     setFloorCookie(value) {
       this.$cookies.set(this.floorCookieName, value, this.floorCookieOptions)
@@ -475,6 +477,7 @@ export default {
       this.closeModal()
       this.curGame++
       if (isFloor1) this.gameStep++
+      this.setFloorCookie(this.curGame);
     },
 
     startGame() {
