@@ -11,6 +11,7 @@ const createGame = (config = {}) => {
   var kontur
   var paint = false
   var closeBtn
+  var restartBtn;
 
   var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take']
   var musics = {}
@@ -152,6 +153,17 @@ const createGame = (config = {}) => {
       back = addImage('background')
     }
 
+    if (!restartBtn) {
+      restartBtn = that.add.image(120, 100, 'restart');
+      restartBtn.setDepth(7);
+      restartBtn.setInteractive();
+      restartBtn.setScale(startPos.common.scale);
+      restartBtn.on('pointerdown', function (pointer, localX, localY, event) {
+        restartLevel();
+
+      });
+    }
+
     if (!kontur) {
       kontur = addImage(
         'tutorial',
@@ -172,7 +184,7 @@ const createGame = (config = {}) => {
       img.setInteractive()
       img.setDepth(2)
       img.on('pointerdown', function (pointer, localX, localY, event) {
-        if (last == this || !last) {
+        if (paintedLines.length == 0 || last == this || !last) {
           if (!line) {
             musics.pic_take.play()
           }
@@ -270,6 +282,7 @@ const createGame = (config = {}) => {
   function endGame() {
     musics.win_common.play()
     back.destroy()
+    restartBtn.destroy();
 
     var end = addImage('end', 291, 365)
 
@@ -291,6 +304,7 @@ const createGame = (config = {}) => {
     })
 
     that.load.image('close', 'common/close.png')
+    that.load.image('restart', 'game2/restart.png')
     commonMusics.forEach((x) => that.load.audio(x, 'common/' + x + '.mp3'))
   }
 
@@ -308,7 +322,7 @@ const createGame = (config = {}) => {
 
     showTutorial()
 
-    closeBtn = that.add.image(530, 70, 'close')
+    closeBtn = that.add.image(465, 100, 'close')
     closeBtn.setDepth(7)
     closeBtn.setInteractive()
     closeBtn.setScale(startPos.common.scale)
@@ -316,6 +330,8 @@ const createGame = (config = {}) => {
       musics['button_common'].play()
       PhaserNuxt.eventEmitter.emit('close')
     })
+
+
     that.input.on(
       'pointerup',
       function (pointer) {
