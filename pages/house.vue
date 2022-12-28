@@ -626,6 +626,8 @@ export default {
       showModal: false,
       imgClicked: [false, false, false, false, false],
       gameFinished: [false, false, false, false, false, false],
+      soundName: ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target', 'complete_common'],
+      commonSounds : {},
 
       floorCount: 6,
 
@@ -651,6 +653,9 @@ export default {
     imgClicked: {
       deep: true,
       handler: function (newValue) {
+        this.commonSounds.complete_common.pause();
+        this.commonSounds.complete_common.currentTime = 0;
+        this.commonSounds.complete_common.play();
         if (newValue.every((x) => x)) {
           setTimeout(() => {
             this.gameStep = 2
@@ -677,6 +682,8 @@ export default {
 
     if (!this.audio) this.playBackgroundSound()
 
+    this.soundName.forEach(x => { this.commonSounds[x] = new Audio(`/common/${x}.mp3`) });
+
     this.$nextTick(() => {
       this.scrollToElement()
     })
@@ -687,6 +694,7 @@ export default {
 
     async dialogBtnClicked(event, floorNum) {
       this.showModal = true
+      this.commonSounds.button_common.play();
       if (this.curGame > 1) {
         this.createGame = await this.getGame()
         setPhaserFocus()
@@ -774,10 +782,13 @@ export default {
     closeModalAndMoveGame() {
       this.closeModal()
       // this.curGame++
-      if (this.curGame >= 3) {
+      if (this.curGame >= 3 || this.curGame !== 6  ) {
         this.curGame++
         this.gameStep = 1
-      } else {
+      } else if (this.curGame === 6) {
+        this.gameStep = 3;
+
+      }  else {
         this.gameStep++
       }
       // this.setFloorCookie(this.curGame)

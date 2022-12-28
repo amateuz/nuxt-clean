@@ -57,7 +57,7 @@ const createGame = (config = {}) => {
   function create() {
     gameImgs.forEach((x) => {
       var img = this.add.image(startPos.images[x].x, startPos.images[x].y, x)
-      img.setInteractive()
+      img.setInteractive({ cursor: 'pointer' })
       img.setScale(startPos.common.scale)
       img.setDepth(startPos.images[x].depth)
       img.rotation = startPos.images[x].rotation
