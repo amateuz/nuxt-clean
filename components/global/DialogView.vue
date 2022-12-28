@@ -207,9 +207,9 @@ export default {
   //border: 2px solid black;
   color: #333f48;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: -0.03em;
-  line-height: 15px;
+  line-height: 18px;
   filter: drop-shadow(0px 3px 0px #310032);
 
   padding: 12px;

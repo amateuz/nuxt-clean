@@ -5,6 +5,12 @@
     <!--    <button @click="curGame++">Next</button>-->
     <!--    <button @click="curGame&#45;&#45;">Prev</button>-->
     <!--    <div>{{ curGame }}</div>-->
+    <div class="debug">
+      curgame
+      {{ curGame }}
+      gamestep
+      {{ gameStep }}
+    </div>
     <div
       class="house-page__container"
       :class="{ [`house-page__container_blur-content`]: showModal }"
@@ -41,7 +47,7 @@
                 />
                 <template v-if="floorNum === 1">
                   <div
-                    v-if="curGame === 6 && gameStep < 2"
+                    v-if="(curGame === 6 && gameStep < 2) || curGame < 6"
                     :class="`floor__top top top_${floorCount - floorNum + 1}`"
                   >
                     <DialogView
@@ -64,7 +70,7 @@
                     />
                   </div>
                   <div
-                    v-if="curGame === 6 && gameStep === 2"
+                    v-if="curGame === 6 && gameStep >= 2"
                     :class="`floor__top top top_all`"
                   >
                     <DialogView
@@ -90,6 +96,7 @@
                 </template>
                 <template v-if="floorNum === 2">
                   <div
+                    v-if="(curGame === 5 && gameStep === 1) || curGame < 5"
                     :class="`floor__top top top_${floorCount - floorNum + 1}`"
                   >
                     <DialogView
@@ -111,9 +118,84 @@
                       @load="onImgLoad"
                     />
                   </div>
+                  <div
+                    v-if="curGame === 5 && gameStep === 2"
+                    :class="`floor__top top top_124`"
+                  >
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="55%"
+                      :dialogs="dialogs[17].content"
+                      :dialog-num="dialogs[17].timesClicked"
+                      :visible="true"
+                      :visibility-timeout="1500"
+                      :hiding-timeout="4000"
+                    />
+                    <nuxt-img
+                      preload
+                      placeholder
+                      class="top__img"
+                      :src="`/tops/top124.png`"
+                      :alt="`top 1 top 2 and top 4 image`"
+                      @load="onImgLoad"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 5 && gameStep === 2"
+                    :class="`floor__top top top_3_state_3`"
+                  >
+                    <DialogView
+                      :id="floorNum"
+                      bottom="70%"
+                      right="-100%"
+                      :dialogs="dialogs[19].content"
+                      :dialog-num="dialogs[19].timesClicked"
+                      :visibility-timeout="7500"
+                      :hiding-timeout="10000"
+                      :visible="true"
+                      @end="
+                        curGame = 6
+                        gameStep = 1
+                      "
+                    />
+                    <nuxt-img
+                      preload
+                      placeholder
+                      class="top__img"
+                      :src="`/tops/top3state3.png`"
+                      :alt="`top 3 image`"
+                      @load="onImgLoad"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 5 && gameStep === 2"
+                    :class="`floor__top top top_5_christmas`"
+                  >
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="55%"
+                      :dialogs="dialogs[18].content"
+                      :dialog-num="dialogs[18].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visibility-timeout="4500"
+                      :hiding-timeout="7000"
+                      :visible="true"
+                    />
+                    <nuxt-img
+                      preload
+                      placeholder
+                      class="top__img"
+                      :src="`/tops/top5christmas.png`"
+                      :alt="`top 5 image`"
+                      @load="onImgLoad"
+                    />
+                  </div>
                 </template>
                 <template v-if="floorNum === 3">
                   <div
+                    v-if="(curGame === 4 && gameStep === 1) || curGame < 4"
                     :class="`floor__top top top_${floorCount - floorNum + 1}`"
                   >
                     <DialogView
@@ -131,6 +213,68 @@
                       :src="`/tops/top${floorCount - floorNum + 1}.png`"
                       :alt="`top ${floorCount - floorNum + 1} image`"
                       @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 4 && gameStep === 2"
+                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                  >
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="40%"
+                      :dialogs="dialogs[14].content"
+                      :dialog-num="dialogs[14].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visible="true"
+                      :visibility-timeout="1500"
+                      :hiding-timeout="3500"
+                    />
+                    <nuxt-img
+                      preload
+                      placeholder
+                      :src="`/tops/top4christmas.png`"
+                      :alt="`top 4 image`"
+                      @load="onImgLoad"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 4 && gameStep === 2"
+                    :class="`floor__top top top_123`"
+                  >
+                    <DialogView
+                      :id="floorNum"
+                      class="dialog__floor4_1"
+                      bottom="102%"
+                      right="18%"
+                      :dialogs="dialogs[15].content"
+                      :dialog-num="dialogs[15].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visible="true"
+                      :visibility-timeout="4000"
+                      :hiding-timeout="6000"
+                    />
+                    <DialogView
+                      :id="floorNum"
+                      class="dialog__floor4_2"
+                      bottom="102%"
+                      right="35%"
+                      :dialogs="dialogs[16].content"
+                      :dialog-num="dialogs[16].timesClicked"
+                      :visible="true"
+                      :visibility-timeout="6500"
+                      :hiding-timeout="10500"
+                      @end="
+                        curGame = 5
+                        gameStep = 1
+                      "
+                    />
+                    <nuxt-img
+                      preload
+                      placeholder
+                      :src="`/tops/top123.png`"
+                      :alt="`top 1 top 2 and top 3 image`"
                       @load="onImgLoad"
                     />
                   </div>
@@ -541,6 +685,26 @@
           </div>
         </div>
       </template>
+      <template v-else-if="curGame === 6 && gameStep === 4">
+        <div class="notice">
+          <nuxt-img class="notice__img" src="/popup-treasure.png" />
+          <div class="notice__text">
+            {{
+              'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
+            }}
+          </div>
+          <Btn
+            w="37%"
+            h="10%"
+            max-w="160px"
+            max-h="50px"
+            bg="10"
+            br="35"
+            class="notice__btn"
+            @click="goToTelegram"
+          />
+        </div>
+      </template>
       <template v-else-if="gameStep === 0">
         <div class="notice">
           <nuxt-img class="notice__img" src="/popup-magic.png" />
@@ -626,8 +790,18 @@ export default {
       showModal: false,
       imgClicked: [false, false, false, false, false],
       gameFinished: [false, false, false, false, false, false],
-      soundName: ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target', 'complete_common'],
-      commonSounds : {},
+      soundName: [
+        'button_common',
+        'win_common',
+        'pic_set',
+        'pic_take',
+        'button_common_target',
+        'button_add',
+        'button_add_target',
+        'complete_common',
+        'finalSpeech',
+      ],
+      commonSounds: {},
 
       floorCount: 6,
 
@@ -653,9 +827,9 @@ export default {
     imgClicked: {
       deep: true,
       handler: function (newValue) {
-        this.commonSounds.complete_common.pause();
-        this.commonSounds.complete_common.currentTime = 0;
-        this.commonSounds.complete_common.play();
+        this.commonSounds.complete_common.pause()
+        this.commonSounds.complete_common.currentTime = 0
+        this.commonSounds.complete_common.play()
         if (newValue.every((x) => x)) {
           setTimeout(() => {
             this.gameStep = 2
@@ -667,8 +841,8 @@ export default {
   beforeCreate() {},
   created() {
     this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
-    this.curGame = 6 // this.floorCookieValue
-    this.gameStep = 2
+    this.curGame = 1 // this.floorCookieValue
+    this.gameStep = 1
   },
   beforeDestroy() {
     if (this.audio) this.audio.pause()
@@ -682,7 +856,9 @@ export default {
 
     if (!this.audio) this.playBackgroundSound()
 
-    this.soundName.forEach(x => { this.commonSounds[x] = new Audio(`/common/${x}.mp3`) });
+    this.soundName.forEach((x) => {
+      this.commonSounds[x] = new Audio(`/common/${x}.mp3`)
+    })
 
     this.$nextTick(() => {
       this.scrollToElement()
@@ -690,11 +866,26 @@ export default {
   },
   computed: {},
   methods: {
-    playSound() {},
+    goToTelegram() {
+      this.showModal = false
+      window.open('https://t.me/+s3XyTFfAsmUyOTUy')
+    },
+
+    playSound() {
+      if (this.audio) this.audio.pause()
+
+      this.commonSounds.finalSpeech.play()
+
+      this.commonSounds.finalSpeech.addEventListener('ended', () => {
+        this.gameStep = 4
+        this.showModal = true
+      })
+    },
 
     async dialogBtnClicked(event, floorNum) {
+      console.log(`current floor ${this.floorCount - floorNum + 1}`)
       this.showModal = true
-      this.commonSounds.button_common.play();
+      this.commonSounds.button_common.play()
       if (this.curGame > 1) {
         this.createGame = await this.getGame()
         setPhaserFocus()
@@ -782,14 +973,10 @@ export default {
     closeModalAndMoveGame() {
       this.closeModal()
       // this.curGame++
-      if (this.curGame >= 3 || this.curGame !== 6  ) {
-        this.curGame++
-        this.gameStep = 1
-      } else if (this.curGame === 6) {
-        this.gameStep = 3;
-
-      }  else {
+      if (this.curGame !== 6) {
         this.gameStep++
+      } else {
+        this.gameStep = 3
       }
       // this.setFloorCookie(this.curGame)
     },
@@ -862,6 +1049,17 @@ export default {
 </script>
 
 <style scoped lang="less">
+.debug {
+  position: fixed;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
+  width: 100px;
+  height: 50px;
+  top: 0;
+  left: 0;
+  z-index: 30;
+}
 .no-interaction {
   cursor: default;
 
@@ -1003,6 +1201,22 @@ a {
     }
   }
 
+  &_123 {
+    bottom: -5%;
+    left: 27%;
+    height: 77.5%;
+
+    .dialog__floor4_1 {
+      right: 18%;
+    }
+  }
+
+  &_124 {
+    bottom: -4%;
+    left: 22%;
+    height: 42%;
+  }
+
   &_1 {
     left: 25.3%;
     bottom: 0;
@@ -1064,6 +1278,11 @@ a {
       height: 46%;
       left: 31%;
     }
+
+    &_state_3 {
+      bottom: -1%;
+      right: 5%;
+    }
   }
 
   &_4 {
@@ -1076,6 +1295,12 @@ a {
     right: 24%;
     bottom: 1.1%;
     width: 10.1%;
+
+    &_christmas {
+      bottom: 1.2%;
+      right: 23%;
+      z-index: 2;
+    }
   }
 
   &_6 {

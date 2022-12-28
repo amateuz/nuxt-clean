@@ -11,9 +11,17 @@ const createGame = (config = {}) => {
   var kontur
   var paint = false
   var closeBtn
-  var restartBtn;
+  var restartBtn
 
-  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target']
+  var commonMusics = [
+    'button_common',
+    'win_common',
+    'pic_set',
+    'pic_take',
+    'button_common_target',
+    'button_add',
+    'button_add_target',
+  ]
   var musics = {}
 
   var gameImgs = [
@@ -157,15 +165,14 @@ const createGame = (config = {}) => {
     }
 
     if (!restartBtn) {
-      restartBtn = that.add.image(120, 100, 'restart');
-      restartBtn.setDepth(7);
-      restartBtn.setInteractive({ cursor: 'pointer' });
-      restartBtn.setScale(startPos.common.scale);
+      restartBtn = that.add.image(120, 100, 'restart')
+      restartBtn.setDepth(7)
+      restartBtn.setInteractive({ cursor: 'pointer' })
+      restartBtn.setScale(startPos.common.scale)
       restartBtn.on('pointerdown', function (pointer, localX, localY, event) {
-        musics.button_add.play();
-        restartLevel();
-
-      });
+        musics.button_add.play()
+        restartLevel()
+      })
     }
 
     if (!kontur) {
@@ -286,7 +293,7 @@ const createGame = (config = {}) => {
   function endGame() {
     musics.win_common.play()
     back.destroy()
-    restartBtn.destroy();
+    restartBtn.destroy()
 
     var end = addImage('end', 291, 365)
 
@@ -309,12 +316,14 @@ const createGame = (config = {}) => {
 
     that.load.image('close', 'common/close.png')
     that.load.image('restart', 'game2/restart.png')
-    commonMusics.forEach((x) => { console.log(x); that.load.audio(x, 'common/' + x + '.mp3')})
+    commonMusics.forEach((x) => {
+      that.load.audio(x, 'common/' + x + '.mp3')
+    })
   }
 
   function create() {
     let { width, height } = that.sys.game.canvas
-
+    console.log('create')
     this.scale.displaySize.setAspectRatio(width / height)
     this.scale.refresh()
 
@@ -338,7 +347,6 @@ const createGame = (config = {}) => {
     closeBtn.on('pointerover', function (pointer, localX, localY, event) {
       musics['button_add_target'].play()
     })
-
 
     that.input.on(
       'pointerup',
