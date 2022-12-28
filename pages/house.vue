@@ -274,179 +274,215 @@
         <template v-if="curGame >= 4">
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div>
-
-
-              {{getMagicWord(1)}}  {{getMagicWord(2)}}  {{getMagicWord(3)}}
-
-              Запомни или запиши полученное заклинание. А если забудешь, нажимай на «колокольчик» с уведомлениями.
+            <div class="notice__text">
+              <!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  ' ' +
+                  getMagicWord(2) +
+                  ' ' +
+                  getMagicWord(3) +
+                  '\n\n' +
+                  'Запомни или запиши \nполученное заклинание.\nА если забудешь,нажимай на «колокольчик» с уведомлениями.'
+                ).trim()
+              }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
         <template v-else-if="curGame >= 3">
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div>
-
-
-              {{getMagicWord(2)}}
-
-              Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.
+            <div class="notice__text">
+              {{ getMagicWord(2) }}
+              {{
+                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
         <template v-else-if="curGame >= 2">
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div>
-
-
-              {{getMagicWord(1)}}
-
-              Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.
+            <div class="notice__text">
+              {{ getMagicWord(1) }}
+              {{
+                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
-          </div>
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
         <template v-else>
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-rules.png" />
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
-          </template>
         </template>
-        <template v-else-if="curGame === 1 && gameStep < 4">
-          <div class="game1">
-            <div class="game1__container">
-              <template v-if="gameStep === 0">
-                <Btn class="game1__close-btn"
-                     w="40px"
-                     h="40px"
-                     max-w="40px"
-                     max-h="40px"
-                     @click.native="closeModal" />
-                <nuxt-img class="game1__img" src="/game1/game1-start.png" />
-                <Btn class="game1__btn"
-                     bg="3"
-                     w="37%"
-                     h="10%"
-                     max-w="160px"
-                     max-h="50px"
-                     br="35"
-                     @click="startGame" />
-              </template>
-              <template v-else-if="gameStep === 1">
-                <template v-for="i in 5">
-                  <nuxt-img v-if="!imgClicked[i - 1]"
-                            preload
-                            :key="i"
-                            :class="[`game1__item game1__item_${i}`]"
-                            :src="`/game1/items/item${i}out.png`"
-                            @click.native="onImgClicked($event, i - 1)" />
-                  <nuxt-img v-else
-                            preload
-                            :key="i + 10"
-                            :class="[
+      </template>
+      <template v-else-if="curGame === 1 && gameStep < 4">
+        <div class="game1">
+          <div class="game1__container">
+            <template v-if="gameStep === 0">
+              <Btn
+                class="game1__close-btn"
+                w="40px"
+                h="40px"
+                max-w="40px"
+                max-h="40px"
+                @click.native="closeModal"
+              />
+              <nuxt-img class="game1__img" src="/game1/game1-start.png" />
+              <Btn
+                class="game1__btn"
+                bg="3"
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                br="35"
+                @click="startGame"
+              />
+            </template>
+            <template v-else-if="gameStep === 1">
+              <template v-for="i in 5">
+                <nuxt-img
+                  v-if="!imgClicked[i - 1]"
+                  preload
+                  :key="i"
+                  :class="[`game1__item game1__item_${i}`]"
+                  :src="`/game1/items/item${i}out.png`"
+                  @click.native="onImgClicked($event, i - 1)"
+                />
+                <nuxt-img
+                  v-else
+                  preload
+                  :key="i + 10"
+                  :class="[
                     `game1__item game1__item_${i}`,
                     { 'no-interaction': i === 1 },
                   ]"
-                            :src="`/game1/items/item${i}.png`"
-                            @click.native="onImgClicked($event, i - 1)" />
-                  <nuxt-img preload
-                            :key="i + 20"
-                            :src="`game1/tracker${i - 1}.png`"
-                            class="game1__tracker game-tracker"
-                            :class="{
-                            'game-tracker_visible' :
-                            imgClicked.filter((x)=>
-                    x).length === i - 1,
-                    }"
-                    />
-                </template>
-                <nuxt-img preload
-                          class="game1__tracker game-tracker"
-                          :class="{ 'game-tracker_visible': imgClicked.every((x) => x) }"
-                          src="/game1/tracker5.png" />
-                <nuxt-img class="game1__floor" src="/floors/floor1.png" />
+                  :src="`/game1/items/item${i}.png`"
+                  @click.native="onImgClicked($event, i - 1)"
+                />
+                <nuxt-img
+                  preload
+                  :key="i + 20"
+                  :src="`game1/tracker${i - 1}.png`"
+                  class="game1__tracker game-tracker"
+                  :class="{
+                    'game-tracker_visible':
+                      imgClicked.filter((x) => x).length === i - 1,
+                  }"
+                />
               </template>
-              <template v-else-if="gameStep === 2">
-                <nuxt-img class="game1__img" src="/game1/game1-finish.png" />
-                <Btn class="game1__btn"
-                     bg="4"
-                     w="37%"
-                     h="10%"
-                     max-w="160px"
-                     max-h="50px"
-                     br="35"
-                     @click="closeModalAndMoveGame" />
-              </template>
-            </div>
+              <nuxt-img
+                preload
+                class="game1__tracker game-tracker"
+                :class="{ 'game-tracker_visible': imgClicked.every((x) => x) }"
+                src="/game1/tracker5.png"
+              />
+              <nuxt-img class="game1__floor" src="/floors/floor1.png" />
+            </template>
+            <template v-else-if="gameStep === 2">
+              <nuxt-img class="game1__img" src="/game1/game1-finish.png" />
+              <Btn
+                class="game1__btn"
+                bg="4"
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                br="35"
+                @click="closeModalAndMoveGame"
+              />
+            </template>
           </div>
-        </template>
-        <template v-else-if="gameStep === 0">
-          <div class="notice">
-            <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div>
-              <template v-if="curGame === 2">
-
-                {{getMagicWord(1)}}
-
-                Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.
-              </template>
-              <template v-else-if="curGame === 3">
-                {{getMagicWord(1)}} {{getMagicWord(2)}}
-
-                Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.
-              </template>
-              <template v-else-if="curGame === 4">
-                {{getMagicWord(1)}} {{getMagicWord(2)}} {{getMagicWord(3)}}
-              </template>
-            </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="magicClosed" />
+        </div>
+      </template>
+      <template v-else-if="gameStep === 0">
+        <div class="notice">
+          <nuxt-img class="notice__img" src="/popup-magic.png" />
+          <div class="notice__text">
+            <template v-if="curGame === 2">
+              {{ getMagicWord(1) }}
+              {{
+                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              }}
+            </template>
+            <template v-else-if="curGame === 3">
+              {{ getMagicWord(1) }} {{ getMagicWord(2) }}
+              {{
+                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              }}
+            </template>
+            <template v-else-if="curGame === 4">
+              {{
+                (
+                  getMagicWord(1) +
+                  ' ' +
+                  getMagicWord(2) +
+                  ' ' +
+                  getMagicWord(3) +
+                  'Запомни или запиши полученное заклинание.\nА если забудешь,нажимай на «колокольчик» с уведомлениями.'
+                ).trim()
+              }}
+            </template>
           </div>
-        </template>
-        <template v-else>
-          <PhaserGame v-if="createGame" :create-game="createGame" />
-        </template>
-</vue-final-modal>
+          <Btn
+            w="37%"
+            h="10%"
+            max-w="160px"
+            max-h="50px"
+            bg="6"
+            br="35"
+            class="notice__btn"
+            @click="magicClosed"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <PhaserGame v-if="createGame" :create-game="createGame" />
+      </template>
+    </vue-final-modal>
     <button
       class="house-page__notice-btn"
       :class="{ swing: noticeAnimated }"
@@ -587,21 +623,45 @@ export default {
     },
 
     getMagicWord(num) {
-      let words = ['Кадабра', 'Сим-сим', 'Покус', 'Фокус', 'Сим', 'Сала', 'Бим', 'Махалай', 'Крекс', 'Фекс', 'Пекс', 'Тру', 'Ля-ля', 'Ляськи', 'Крибли', 'Крабле', 'Бумс', 'Тибидох', 'Тонус', 'Талонус'];
-      let word = this.$cookies.get("magic_word_" + num.toString());
+      let words = [
+        'Кадабра',
+        'Сим-сим',
+        'Покус',
+        'Фокус',
+        'Сим',
+        'Сала',
+        'Бим',
+        'Махалай',
+        'Крекс',
+        'Фекс',
+        'Пекс',
+        'Тру',
+        'Ля-ля',
+        'Ляськи',
+        'Крибли',
+        'Крабле',
+        'Бумс',
+        'Тибидох',
+        'Тонус',
+        'Талонус',
+      ]
+      let word = this.$cookies.get('magic_word_' + num.toString())
       if (word === undefined || word === '') {
         if (num > 1) {
           for (let i = 1; i < num; ++i) {
-            const prev = this.$cookies.get("magic_word_" + i.toString());
-            words = words.filter(x => x !== prev);
-            
+            const prev = this.$cookies.get('magic_word_' + i.toString())
+            words = words.filter((x) => x !== prev)
           }
         }
 
-        word = words[Math.floor(Math.random() * words.length)];
-        this.$cookies.set("magic_word_" + num.toString(), word, this.floorCookieOptions);
+        word = words[Math.floor(Math.random() * words.length)]
+        this.$cookies.set(
+          'magic_word_' + num.toString(),
+          word,
+          this.floorCookieOptions
+        )
       }
-      return word;
+      return word
     },
     closeModal() {
       this.showModal = false
@@ -710,6 +770,20 @@ a {
 
 .notice {
   position: relative;
+
+  &__text {
+    position: absolute;
+    bottom: 42%;
+    max-width: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    font-weight: 500;
+    white-space: pre-wrap;
+    max-height: 180px;
+  }
 
   &__img {
     max-height: 100vh;
