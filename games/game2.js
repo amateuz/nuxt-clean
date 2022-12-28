@@ -13,7 +13,7 @@ const createGame = (config = {}) => {
   var closeBtn
   var restartBtn;
 
-  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take']
+  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target']
   var musics = {}
 
   var gameImgs = [
@@ -143,6 +143,9 @@ const createGame = (config = {}) => {
       startLevel()
       tutorial.destroy()
       startBtn.destroy()
+    })
+    startBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_common_target'].play()
     })
   }
 
@@ -327,8 +330,12 @@ const createGame = (config = {}) => {
     closeBtn.setInteractive({ cursor: 'pointer' })
     closeBtn.setScale(startPos.common.scale)
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play()
+      musics['button_add'].play()
       PhaserNuxt.eventEmitter.emit('close')
+    })
+
+    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_add_target'].play()
     })
 
 

@@ -10,14 +10,14 @@ const createGame = (config = {}) => {
   var scale = 0.2;
   var parts = [];
 
-  var commonMusics = ['button_common', 'pic_take', 'pic_set', 'win_common'];
+  var commonMusics = ['button_common', 'pic_take', 'pic_set', 'win_common', 'button_common_target', 'button_add', 'button_add_target'];
 
   var gameImgs = ['bubble', 'frame_1', 'frame_2', 'frame_3', 'frame_4',
 
     'main_popup', 'pause', 'pause_2', 'play', 'play_2', 'speed', 'speed_2', 'stop', 'stop_2'];
 
 
-  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take'];
+  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target'];
   var musics = {};
 
   var startPos = {
@@ -222,6 +222,10 @@ const createGame = (config = {}) => {
       startBtn.destroy();
 
     });
+
+    startBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_common_target'].play()
+    })
   }
 
   function startLevel() {
@@ -311,6 +315,9 @@ const createGame = (config = {}) => {
       PhaserNuxt.eventEmitter.emit('exit');
 
     });
+    exitBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_common_target'].play()
+    })
   }
 
   return new Phaser.Game({

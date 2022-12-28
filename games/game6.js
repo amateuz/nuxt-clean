@@ -83,10 +83,14 @@ const createGame = (config = {}) => {
     closeBtn.setInteractive({ cursor: 'pointer' });
     closeBtn.setScale(startPos.common.scale);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play();
+      musics['button_add'].play();
       PhaserNuxt.eventEmitter.emit('close');
 
     });
+
+    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_add_target'].play()
+    })
 
   }
 
