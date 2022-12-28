@@ -1,6 +1,10 @@
 <template>
   <section class="start-page">
-    <NuxtLink class="start-page__btn" to="/comics" />
+    <NuxtLink
+      @click.native="playBtnClick"
+      class="start-page__btn"
+      to="/comics"
+    />
     <section class="preload">
       <nuxt-img :src="`/bgs/house-bg2.png`" />
       <nuxt-img :src="`/bgs/btn-bg.png`" />
@@ -56,6 +60,7 @@ export default {
   data() {
     return {
       audio: null,
+      audioBtn: null,
     }
   },
   methods: {

@@ -184,7 +184,9 @@ export default {
         },
         false
       )
-      this.audio.play()
+      this.audio.addEventListener('canplay', () => {
+        this.audio.play()
+      })
     },
     playBtnClick() {
       const audio = new Audio('/sounds/button_common.mp3')

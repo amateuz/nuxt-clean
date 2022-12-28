@@ -917,7 +917,7 @@ export default {
     } else {
       this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
     }
-    this.curGame = 1 // this.floorCookieValue
+    this.curGame = 6 // this.floorCookieValue
     this.gameStep = 1
   },
   beforeDestroy() {
@@ -963,7 +963,7 @@ export default {
       this.commonSounds.button_common.play()
       if (this.curGame > 1) {
         if (this.curGame === 3 || this.curGame === 5) {
-          this.audio.pause();
+          this.audio.pause()
         }
         this.createGame = await this.getGame()
         setPhaserFocus()
@@ -983,7 +983,7 @@ export default {
               this.createGame = null
               this.closeModal()
               if (this.audio.paused) {
-                this.audio.play();
+                this.audio.play()
               }
             },
             this
