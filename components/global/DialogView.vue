@@ -130,6 +130,7 @@ export default {
       }, this.hidingTimeout)
     }
   },
+  mounted() {},
   computed: {
     getDialogNum() {
       if (this.dialogNumber < 0) return 0

@@ -5,12 +5,12 @@
     <!--    <button @click="curGame++">Next</button>-->
     <!--    <button @click="curGame&#45;&#45;">Prev</button>-->
     <!--    <div>{{ curGame }}</div>-->
-    <div class="debug">
-      curgame
-      {{ curGame }}
-      gamestep
-      {{ gameStep }}
-    </div>
+    <!--    <div class="debug">-->
+    <!--      curgame-->
+    <!--      {{ curGame }}-->
+    <!--      gamestep-->
+    <!--      {{ gameStep }}-->
+    <!--    </div>-->
     <div
       class="house-page__container"
       :class="{ [`house-page__container_blur-content`]: showModal }"
@@ -348,6 +348,11 @@
                       :visibility-timeout="3500"
                       :hiding-timeout="7000"
                       :visible="true"
+                      @end="
+                        curGame++
+                        gameStep = 0
+                        showModal = true
+                      "
                     />
                   </div>
                   <div
@@ -474,16 +479,16 @@
                       dialog-origin="right-bottom"
                       @click="dialogBtnClicked($event, floorNum - 1)"
                     />
-                    <DialogView
-                      :id="7"
-                      v-if="gameStep === 3"
-                      class="top__dialog_clock"
-                      :dialogs="dialogs[6].content"
-                      :dialog-num="dialogs[6].timesClicked"
-                      :visible="true"
-                      :visibility-timeout="500"
-                      :hiding-timeout="1100"
-                    />
+                    <!--                    <DialogView-->
+                    <!--                      :id="7"-->
+                    <!--                      v-if="gameStep === 3"-->
+                    <!--                      class="top__dialog_clock"-->
+                    <!--                      :dialogs="dialogs[6].content"-->
+                    <!--                      :dialog-num="dialogs[6].timesClicked"-->
+                    <!--                      :visible="true"-->
+                    <!--                      :visibility-timeout="500"-->
+                    <!--                      :hiding-timeout="1100"-->
+                    <!--                    />-->
                     <DialogView
                       :id="8"
                       v-if="gameStep === 3"
@@ -492,8 +497,8 @@
                       :dialog-num="dialogs[7].timesClicked"
                       dialog-origin="right-bottom"
                       :visible="true"
-                      :visibility-timeout="1600"
-                      :hiding-timeout="2700"
+                      :visibility-timeout="500"
+                      :hiding-timeout="3500"
                       @end="
                         gameStep = 0
                         curGame = 2
@@ -551,9 +556,12 @@
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
-              {{ getMagicWord(2) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              <!--
+              -->{{
+                (
+                  getMagicWord(2) +
+                  +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </div>
             <Btn
@@ -572,9 +580,12 @@
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
-              {{ getMagicWord(1) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              <!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </div>
             <Btn
@@ -689,7 +700,8 @@
         <div class="notice">
           <nuxt-img class="notice__img" src="/popup-treasure.png" />
           <div class="notice__text">
-            {{
+            <!--
+            -->{{
               'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
             }}
           </div>
@@ -710,25 +722,37 @@
           <nuxt-img class="notice__img" src="/popup-magic.png" />
           <div class="notice__text">
             <template v-if="curGame === 2">
-              {{ getMagicWord(1) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              <!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  '\n\n' +
+                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </template>
-            <template v-else-if="curGame === 3">
-              {{ getMagicWord(1) }} {{ getMagicWord(2) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+            <template v-else-if="curGame === 3"
+              ><!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  ' ' +
+                  getMagicWord(2) +
+                  '\n\n' +
+                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </template>
             <template v-else-if="curGame === 4">
-              {{
+              <!--
+              -->{{
                 (
                   getMagicWord(1) +
                   ' ' +
                   getMagicWord(2) +
                   ' ' +
                   getMagicWord(3) +
+                  '\n\n' +
                   'Запомни или запиши полученное заклинание.\nА если забудешь,нажимай на «колокольчик» с уведомлениями.'
                 ).trim()
               }}
@@ -815,14 +839,16 @@ export default {
     }
   },
   watch: {
+    curGame(newValue) {
+      console.log(newValue)
+      this.setFloorCookie(newValue)
+      if (newValue > 1) setPhaserFocus()
+    },
     floorCookieValue(newValue) {
       this.setFloorCookie(newValue)
     },
     imgLoaded(newValue) {
       if (newValue > 24) this.isLoading = false
-    },
-    curGame(newValue) {
-      if (newValue > 1) setPhaserFocus()
     },
     imgClicked: {
       deep: true,
@@ -841,7 +867,7 @@ export default {
   beforeCreate() {},
   created() {
     this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
-    this.curGame = 1 // this.floorCookieValue
+    this.curGame = this.floorCookieValue
     this.gameStep = 1
   },
   beforeDestroy() {
@@ -883,7 +909,6 @@ export default {
     },
 
     async dialogBtnClicked(event, floorNum) {
-      console.log(`current floor ${this.floorCount - floorNum + 1}`)
       this.showModal = true
       this.commonSounds.button_common.play()
       if (this.curGame > 1) {
@@ -1024,7 +1049,7 @@ export default {
 
     scrollToElement() {
       setTimeout(() => {
-        const el = this.$refs.floor1[0]
+        const el = this.$refs[`floor${this.curGame}`][0]
 
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' })
@@ -1316,7 +1341,9 @@ a {
 
   &__dialog_top6_christmas {
     top: -30%;
-    left: -55%;
+    left: -100%;
+    pointer-events: none;
+    touch-action: none;
   }
 }
 
