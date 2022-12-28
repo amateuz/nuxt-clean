@@ -73,7 +73,7 @@ export default {
   background-color: transparent;
   background-size: cover;
   background-repeat: no-repeat;
-  // box-shadow: 0 1px 0 #000000;
+  box-shadow: 0 1px 0 #000000;
   border-radius: 8px;
   color: #fff;
   display: flex;
