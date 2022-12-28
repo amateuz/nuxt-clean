@@ -974,6 +974,9 @@ export default {
             () => {
               this.createGame = null
               this.closeModalAndMoveGame()
+              if (this.audio.paused) {
+                this.audio.play();
+              }
             },
             this
           )
