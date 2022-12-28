@@ -80,7 +80,7 @@ const createGame = (config = {}) => {
     showTutorial();
     closeBtn = that.add.image(530, 70, 'close');
     closeBtn.setDepth(7);
-    closeBtn.setInteractive();
+    closeBtn.setInteractive({ cursor: 'pointer' });
     closeBtn.setScale(startPos.common.scale);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
@@ -126,7 +126,7 @@ const createGame = (config = {}) => {
 
     items.forEach(x => {
       x.setScale(startPos.common.scale);
-      x.setInteractive();
+      x.setInteractive({ cursor: 'pointer' });
       x.on('pointerdown', function (pointer, localX, localY, event) {
         musics['button_common'].play();
         chosen = this;
@@ -174,7 +174,7 @@ const createGame = (config = {}) => {
               break;
           }
           var img = that.add.image(this.x, startPos.common.items.y - startPos.common.items.d * (j - 1), "cloth_" + c.toString() + "_" + j.toString());
-          img.setInteractive();
+          img.setInteractive({ cursor: 'pointer' });
           img.setScale(startPos.common.scale);
           img.setDepth(5);
           img.on('pointerdown', function (pointer, localX, localY, event) {
@@ -240,7 +240,7 @@ const createGame = (config = {}) => {
     var startBtn = that.add.image(291, 502, 'start');
     startBtn.setScale(startPos.common.scale);
     startBtn.setDepth(5);
-    startBtn.setInteractive();
+    startBtn.setInteractive({ cursor: 'pointer' });
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       startGame();
@@ -334,7 +334,7 @@ const createGame = (config = {}) => {
     var exitBtn = that.add.image(285, 502, 'exit');
     exitBtn.setScale(0.625);
     exitBtn.setDepth(5);
-    exitBtn.setInteractive();
+    exitBtn.setInteractive({ cursor: 'pointer' });
     exitBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       PhaserNuxt.eventEmitter.emit('exit');

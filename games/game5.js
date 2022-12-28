@@ -23,18 +23,18 @@ const createGame = (config = {}) => {
   var startPos = {
     'common': { 'scale': 0.2 }, 'images': {
       'bubble': { 'x': 287, 'y': 142, 'depth': 0 },
-      'frame_1': { 'x': 357, 'y': 551, 'depth': 0 },
-      'frame_2': { 'x': 219, 'y': 427, 'depth': 0 },
-      'frame_3': { 'x': 357, 'y': 426, 'depth': 0 },
-      'frame_4': { 'x': 220, 'y': 552, 'depth': 0 },
+      'frame_1': { 'x': 367, 'y': 565, 'depth': 0 },
+      'frame_2': { 'x': 215, 'y': 429, 'depth': 0 },
+      'frame_3': { 'x': 367, 'y': 429, 'depth': 0 },
+      'frame_4': { 'x': 215, 'y': 565, 'depth': 0 },
       'main_popup': { 'x': 289, 'y': 447, 'depth': -2 }, 'pause': { 'x': 182, 'y': 295, 'depth': 0 }, 'pause_2': { 'x': 182, 'y': 295, 'depth': -1 }, 'play': { 'x': 252, 'y': 295, 'depth': 0 }, 'play_2': { 'x': 252, 'y': 295, 'depth': -1 }, 'speed': { 'x': 327, 'y': 295, 'depth': 0 }, 'speed_2': { 'x': 327, 'y': 295, 'depth': -1 }, 'stop': { 'x': 397, 'y': 295, 'depth': 0 }, 'stop_2': { 'x': 397, 'y': 295, 'depth': -1 }
     }
   };
   var gameObjects = [];
 
-  var endPosForFrame = { 'frame_1': { 'x': 219, 'y': 427, 'depth': 0 }, 'frame_2': { 'x': 357, 'y': 426, 'depth': 0 }, 'frame_3': { 'x': 220, 'y': 552, 'depth': 0 }, 'frame_4': { 'x': 357, 'y': 551, 'depth': 0 } };
-  var startDrag = { 'x': 219, 'y': 427 };
-  var framePoses = [{ 'x': 219, 'y': 427, 'depth': 0 }, { 'x': 357, 'y': 426, 'depth': 0 }, { 'x': 220, 'y': 552, 'depth': 0 }, { 'x': 357, 'y': 551, 'depth': 0 }];
+  var endPosForFrame = { 'frame_1': { 'x': 215, 'y': 429, 'depth': 0 }, 'frame_2': { 'x': 367, 'y': 429, 'depth': 0 }, 'frame_3': { 'x': 215, 'y': 565, 'depth': 0 }, 'frame_4': { 'x': 367, 'y': 565, 'depth': 0 } };
+  var startDrag = { 'x': 215, 'y': 429 };
+  var framePoses = [{ 'x': 215, 'y': 429, 'depth': 0 }, { 'x': 367, 'y': 429 , 'depth': 0 }, { 'x': 215, 'y': 565, 'depth': 0 }, { 'x': 367, 'y': 565, 'depth': 0 }];
   var chosen;
   var tale;
   function preload() {
@@ -166,6 +166,17 @@ const createGame = (config = {}) => {
 
     });
 
+    closeBtn = that.add.image(530, 70, 'close');
+    closeBtn.setDepth(7);
+    closeBtn.setInteractive({ cursor: 'pointer' });
+    closeBtn.setScale(0.625);
+    closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
+      musics['button_common'].play();
+      PhaserNuxt.eventEmitter.emit('close');
+
+    });
+    showTutorial();
+
     tale = that.sound.addAudioSprite('tale');
 
     that.input.on('drag', function (pointer, gameObject, dragX, dragY) {
@@ -175,16 +186,8 @@ const createGame = (config = {}) => {
 
     });
 
-    showTutorial();
-    closeBtn = that.add.image(530, 70, 'close');
-    closeBtn.setDepth(7);
-    closeBtn.setInteractive();
-    closeBtn.setScale(0.625);
-    closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play();
-      PhaserNuxt.eventEmitter.emit('close');
+    
 
-    });
   }
 
   function update() {
@@ -211,7 +214,7 @@ const createGame = (config = {}) => {
     var startBtn = that.add.image(291, 480, 'start');
     startBtn.setScale(0.625);
     startBtn.setDepth(5);
-    startBtn.setInteractive();
+    startBtn.setInteractive({ cursor: 'pointer' });
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       startLevel();
@@ -230,7 +233,7 @@ const createGame = (config = {}) => {
 
 
       if (x.startsWith('frame')) {
-        img.setInteractive();
+        img.setInteractive({ cursor: 'pointer' });
         img.setDepth(1);
         that.input.setDraggable(img);
 
@@ -238,7 +241,7 @@ const createGame = (config = {}) => {
 
       if (x === 'play' || x === 'speed' || x === 'stop' || x === 'pause') {
         {
-          img.setInteractive();
+          img.setInteractive({ cursor: 'pointer' });
           img.on('pointerdown', function (pointer, localX, localY, event) {
             musics['button_common'].play();
             that.alpha = 0;

@@ -121,7 +121,7 @@ const createGame = (config = {}) => {
 
     closeBtn = that.add.image(530, 70, 'close');
     closeBtn.setDepth(7);
-    closeBtn.setInteractive();
+    closeBtn.setInteractive({ cursor: 'pointer' });
     closeBtn.setScale(startPos.common.scale);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
@@ -179,7 +179,7 @@ const createGame = (config = {}) => {
       var btn = that.add.image(info.x, info.y, info.img);
       btn.setScale(startPos.common.scale);
       btn.setDepth(info.depth);
-      btn.setInteractive();
+      btn.setInteractive({ cursor: 'pointer' });
       btn.on('pointerdown', function (pointer, localX, localY, event) {
         this.setTint(0xbbbbbb);
         that.time.delayedCall(300, () => this.clearTint());
@@ -242,7 +242,7 @@ const createGame = (config = {}) => {
     var startBtn = that.add.image(291, 480, 'start');
     startBtn.setScale(0.625);
     startBtn.setDepth(5);
-    startBtn.setInteractive();
+    startBtn.setInteractive({ cursor: 'pointer' });
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       startGame();
@@ -263,7 +263,7 @@ const createGame = (config = {}) => {
     var restartBtn = that.add.image(292, 427, 'restart');
     restartBtn.setScale(0.625);
     restartBtn.setDepth(5);
-    restartBtn.setInteractive();
+    restartBtn.setInteractive({ cursor: 'pointer' });
 
     var res = showResult();
 
@@ -285,7 +285,7 @@ const createGame = (config = {}) => {
       var exitBtn = that.add.image(292, 483, 'exit');
       exitBtn.setScale(0.625);
       exitBtn.setDepth(5);
-      exitBtn.setInteractive();
+      exitBtn.setInteractive({ cursor: 'pointer' });
       exitBtn.on('pointerdown', function (pointer, localX, localY, event) {
         musics['button_common'].play();
         PhaserNuxt.eventEmitter.emit('exit');
