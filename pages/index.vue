@@ -5,13 +5,14 @@
       <nuxt-img :src="`/bgs/house-bg2.png`" />
       <nuxt-img :src="`/bgs/btn-bg.png`" />
       <nuxt-img :src="`/bgs/start-bg-3.png`" />
-      <template v-for="i in 8">
+      <template v-for="i in 10">
         <nuxt-img :key="i" :src="`/btns/btn${i}-text.png`" />
       </template>
       <nuxt-img :src="`/btns/close.png`" />
       <nuxt-img :src="`/btns/notice.png`" />
-      <template v-for="i in 5">
+      <template v-for="i in 6">
         <nuxt-img :key="i + 10" :src="`/floors/floor${i}.png`" />
+        <nuxt-img :key="i + 70" :src="`/floors/floor${i}christmas.png`" />
       </template>
       <nuxt-img :src="`/floors/floor1christmas.png`" />
       <template v-for="i in 5">
@@ -26,11 +27,23 @@
       <template v-for="i in 6">
         <nuxt-img :key="i + 50" :src="`/tops/top${i}.png`" />
       </template>
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 80" :src="`/tops/top${i}christmas.png`" />
+      </template>
       <template v-for="i in 6">
         <nuxt-img :key="i + 60" :src="`/comics/frame${i}.svg`" />
       </template>
       <nuxt-img :src="`/house2.png`" />
       <nuxt-img :src="`/popup-rules.png`" />
+      <nuxt-img :src="`/popup-magic.png`" />
+      <nuxt-img :src="`/popup-treasure.png`" />
+      <nuxt-img :src="`/tops/top1state2.png`" />
+      <nuxt-img :src="`/tops/top2state2.png`" />
+      <nuxt-img :src="`/tops/top3state2.png`" />
+      <nuxt-img :src="`/tops/top3state3.png`" />
+      <nuxt-img :src="`/tops/top123.png`" />
+      <nuxt-img :src="`/tops/top124.png`" />
+      <nuxt-img :src="`/tops/topall.png`" />
       <audio src="/sounds/button_common.mp3" />
       <audio src="/sounds/pageTurn.mp3" />
     </section>

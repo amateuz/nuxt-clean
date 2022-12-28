@@ -5,12 +5,58 @@
     <!--    <button @click="curGame++">Next</button>-->
     <!--    <button @click="curGame&#45;&#45;">Prev</button>-->
     <!--    <div>{{ curGame }}</div>-->
-    <div class="debug">
-      curgame
-      {{ curGame }}
-      gamestep
-      {{ gameStep }}
-    </div>
+    <!--    <div class="debug">-->
+    <!--      curgame-->
+    <!--      {{ curGame }}-->
+    <!--      gamestep-->
+    <!--      {{ gameStep }}-->
+    <!--    </div>-->
+    <section class="preload">
+      <nuxt-img :src="`/bgs/house-bg2.png`" />
+      <nuxt-img :src="`/bgs/btn-bg.png`" />
+      <nuxt-img :src="`/bgs/start-bg-3.png`" />
+      <template v-for="i in 10">
+        <nuxt-img :key="i" :src="`/btns/btn${i}-text.png`" />
+      </template>
+      <nuxt-img :src="`/btns/close.png`" />
+      <nuxt-img :src="`/btns/notice.png`" />
+      <template v-for="i in 6">
+        <nuxt-img :key="i + 10" :src="`/floors/floor${i}.png`" />
+        <nuxt-img :key="i + 70" :src="`/floors/floor${i}christmas.png`" />
+      </template>
+      <nuxt-img :src="`/floors/floor1christmas.png`" />
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 20" :src="`/game1/items/item${i}.png`" />
+        <nuxt-img :key="i + 30" :src="`/game1/items/item${i}out.png`" />
+      </template>
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 40" :src="`/game1/tracker${i}.png`" />
+      </template>
+      <nuxt-img :src="`/game1/game1-finish.png`" />
+      <nuxt-img :src="`/game1/game1-start.png`" />
+      <template v-for="i in 6">
+        <nuxt-img :key="i + 50" :src="`/tops/top${i}.png`" />
+      </template>
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 80" :src="`/tops/top${i}christmas.png`" />
+      </template>
+      <template v-for="i in 6">
+        <nuxt-img :key="i + 60" :src="`/comics/frame${i}.svg`" />
+      </template>
+      <nuxt-img :src="`/house2.png`" />
+      <nuxt-img :src="`/popup-rules.png`" />
+      <nuxt-img :src="`/popup-magic.png`" />
+      <nuxt-img :src="`/popup-treasure.png`" />
+      <nuxt-img :src="`/tops/top1state2.png`" />
+      <nuxt-img :src="`/tops/top2state2.png`" />
+      <nuxt-img :src="`/tops/top3state2.png`" />
+      <nuxt-img :src="`/tops/top3state3.png`" />
+      <nuxt-img :src="`/tops/top123.png`" />
+      <nuxt-img :src="`/tops/top124.png`" />
+      <nuxt-img :src="`/tops/topall.png`" />
+      <audio src="/sounds/button_common.mp3" />
+      <audio src="/sounds/pageTurn.mp3" />
+    </section>
     <div
       class="house-page__container"
       :class="{ [`house-page__container_blur-content`]: showModal }"
@@ -76,7 +122,7 @@
                     <DialogView
                       :id="floorNum"
                       bottom="102%"
-                      right="40%"
+                      right="18%"
                       :dialogs="dialogs[13].content"
                       :dialog-num="dialogs[13].timesClicked"
                       :visible="true"
@@ -348,6 +394,11 @@
                       :visibility-timeout="3500"
                       :hiding-timeout="7000"
                       :visible="true"
+                      @end="
+                        curGame++
+                        gameStep = 0
+                        showModal = true
+                      "
                     />
                   </div>
                   <div
@@ -474,16 +525,16 @@
                       dialog-origin="right-bottom"
                       @click="dialogBtnClicked($event, floorNum - 1)"
                     />
-                    <DialogView
-                      :id="7"
-                      v-if="gameStep === 3"
-                      class="top__dialog_clock"
-                      :dialogs="dialogs[6].content"
-                      :dialog-num="dialogs[6].timesClicked"
-                      :visible="true"
-                      :visibility-timeout="500"
-                      :hiding-timeout="1100"
-                    />
+                    <!--                    <DialogView-->
+                    <!--                      :id="7"-->
+                    <!--                      v-if="gameStep === 3"-->
+                    <!--                      class="top__dialog_clock"-->
+                    <!--                      :dialogs="dialogs[6].content"-->
+                    <!--                      :dialog-num="dialogs[6].timesClicked"-->
+                    <!--                      :visible="true"-->
+                    <!--                      :visibility-timeout="500"-->
+                    <!--                      :hiding-timeout="1100"-->
+                    <!--                    />-->
                     <DialogView
                       :id="8"
                       v-if="gameStep === 3"
@@ -492,8 +543,8 @@
                       :dialog-num="dialogs[7].timesClicked"
                       dialog-origin="right-bottom"
                       :visible="true"
-                      :visibility-timeout="1600"
-                      :hiding-timeout="2700"
+                      :visibility-timeout="500"
+                      :hiding-timeout="3500"
                       @end="
                         gameStep = 0
                         curGame = 2
@@ -551,9 +602,12 @@
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
-              {{ getMagicWord(2) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              <!--
+              -->{{
+                (
+                  getMagicWord(2) +
+                  +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </div>
             <Btn
@@ -572,9 +626,12 @@
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
-              {{ getMagicWord(1) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              <!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </div>
             <Btn
@@ -689,7 +746,8 @@
         <div class="notice">
           <nuxt-img class="notice__img" src="/popup-treasure.png" />
           <div class="notice__text">
-            {{
+            <!--
+            -->{{
               'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
             }}
           </div>
@@ -710,25 +768,37 @@
           <nuxt-img class="notice__img" src="/popup-magic.png" />
           <div class="notice__text">
             <template v-if="curGame === 2">
-              {{ getMagicWord(1) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+              <!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  '\n\n' +
+                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </template>
-            <template v-else-if="curGame === 3">
-              {{ getMagicWord(1) }} {{ getMagicWord(2) }}
-              {{
-                'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+            <template v-else-if="curGame === 3"
+              ><!--
+              -->{{
+                (
+                  getMagicWord(1) +
+                  ' ' +
+                  getMagicWord(2) +
+                  '\n\n' +
+                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                ).trim()
               }}
             </template>
             <template v-else-if="curGame === 4">
-              {{
+              <!--
+              -->{{
                 (
                   getMagicWord(1) +
                   ' ' +
                   getMagicWord(2) +
                   ' ' +
                   getMagicWord(3) +
+                  '\n\n' +
                   'Запомни или запиши полученное заклинание.\nА если забудешь,нажимай на «колокольчик» с уведомлениями.'
                 ).trim()
               }}
@@ -815,14 +885,15 @@ export default {
     }
   },
   watch: {
+    curGame(newValue) {
+      this.setFloorCookie(newValue)
+      if (newValue > 1) setPhaserFocus()
+    },
     floorCookieValue(newValue) {
       this.setFloorCookie(newValue)
     },
     imgLoaded(newValue) {
       if (newValue > 24) this.isLoading = false
-    },
-    curGame(newValue) {
-      if (newValue > 1) setPhaserFocus()
     },
     imgClicked: {
       deep: true,
@@ -840,7 +911,12 @@ export default {
   },
   beforeCreate() {},
   created() {
-    this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
+    const floorCookie = this.getFloorCookie(this.floorCookieName)
+    if (!floorCookie || isNaN(floorCookie)) {
+      this.floorCookieValue = 1
+    } else {
+      this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
+    }
     this.curGame = 1 // this.floorCookieValue
     this.gameStep = 1
   },
@@ -883,7 +959,6 @@ export default {
     },
 
     async dialogBtnClicked(event, floorNum) {
-      console.log(`current floor ${this.floorCount - floorNum + 1}`)
       this.showModal = true
       this.commonSounds.button_common.play()
       if (this.curGame > 1) {
@@ -1030,7 +1105,7 @@ export default {
 
     scrollToElement() {
       setTimeout(() => {
-        const el = this.$refs.floor1[0]
+        const el = this.$refs[`floor${this.curGame}`][0]
 
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' })
@@ -1066,6 +1141,7 @@ export default {
   left: 0;
   z-index: 30;
 }
+
 .no-interaction {
   cursor: default;
 
@@ -1173,6 +1249,15 @@ a {
     &:active {
       transform: translate(0, 5px) !important;
     }
+  }
+}
+
+.preload {
+  display: none;
+
+  img {
+    width: 0;
+    height: 0;
   }
 }
 
@@ -1322,7 +1407,9 @@ a {
 
   &__dialog_top6_christmas {
     top: -30%;
-    left: -55%;
+    left: -100%;
+    pointer-events: none;
+    touch-action: none;
   }
 }
 

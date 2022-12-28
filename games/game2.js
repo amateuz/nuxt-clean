@@ -232,7 +232,7 @@ const createGame = (config = {}) => {
               line = new Phaser.Geom.Line(start.x, start.y, start.x, start.y)
               lastPointIdx = curIdx
               last = this
-              playSound('musics');
+              playSound('musics')
             }
           }
         }
@@ -327,7 +327,7 @@ const createGame = (config = {}) => {
 
   function create() {
     let { width, height } = that.sys.game.canvas
-    console.log('create')
+    // console.log('create')
     this.scale.displaySize.setAspectRatio(width / height)
     this.scale.refresh()
 
@@ -335,7 +335,9 @@ const createGame = (config = {}) => {
 
     graphics.fillStyle(0xff0000)
 
-    commonMusics.forEach((x) => { musics[x] = that.sound.add(x); })
+    commonMusics.forEach((x) => {
+      musics[x] = that.sound.add(x)
+    })
 
     showTutorial()
 
