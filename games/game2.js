@@ -162,6 +162,7 @@ const createGame = (config = {}) => {
       restartBtn.setInteractive({ cursor: 'pointer' });
       restartBtn.setScale(startPos.common.scale);
       restartBtn.on('pointerdown', function (pointer, localX, localY, event) {
+        musics.button_add.play();
         restartLevel();
 
       });
@@ -220,7 +221,7 @@ const createGame = (config = {}) => {
               line = new Phaser.Geom.Line(start.x, start.y, start.x, start.y)
               lastPointIdx = curIdx
               last = this
-              musics['pic_set'].play()
+              musics.pic_set.play()
             }
           }
         }
@@ -308,7 +309,7 @@ const createGame = (config = {}) => {
 
     that.load.image('close', 'common/close.png')
     that.load.image('restart', 'game2/restart.png')
-    commonMusics.forEach((x) => that.load.audio(x, 'common/' + x + '.mp3'))
+    commonMusics.forEach((x) => { console.log(x); that.load.audio(x, 'common/' + x + '.mp3')})
   }
 
   function create() {
