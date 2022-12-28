@@ -106,7 +106,7 @@ const createGame = (config = {}) => {
     'pic_take',
     'robovoice_1',
     'robovoice_2',
-    'robovoice_3',
+    'robovoice_3', , 'button_common_target', 'button_add', 'button_add_target'
   ]
   var musics = {}
 
@@ -152,13 +152,17 @@ const createGame = (config = {}) => {
     showTutorial()
     closeBtn = that.add.image(530, 70, 'close');
     closeBtn.setDepth(7);
-    closeBtn.setInteractive();
+    closeBtn.setInteractive({ cursor: 'pointer' });
     closeBtn.setScale(0.625);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play();
+      musics['button_add'].play();
       PhaserNuxt.eventEmitter.emit('close');
 
     });
+
+    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_add_target'].play()
+    })
   }
 
   function resetLevel() {
@@ -215,7 +219,7 @@ const createGame = (config = {}) => {
     var startBtn = that.add.image(291, 450, 'start')
     startBtn.setScale(0.625)
     startBtn.setDepth(5)
-    startBtn.setInteractive()
+    startBtn.setInteractive({ cursor: 'pointer' })
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play()
       startGame()
@@ -244,7 +248,7 @@ const createGame = (config = {}) => {
     startPos.forEach((p) => {
       var img = that.add.image(p.x, p.y, level + '_word' + i.toString())
       ++i
-      img.setInteractive()
+      img.setInteractive({ cursor: 'pointer' })
       that.input.setDraggable(img)
       img.setDepth(2)
       img.setScale(0.5)
@@ -271,7 +275,7 @@ const createGame = (config = {}) => {
 
     var button = that.add.image(275, 398, 'play')
     button.setScale(0.5)
-    button.setInteractive()
+    button.setInteractive({ cursor: 'pointer' })
     button.on('pointerdown', function (pointer, localX, localY, event) {
       this.setTexture('play_pressed')
       var music = that.sound.add('all')
@@ -327,7 +331,7 @@ const createGame = (config = {}) => {
     var exitBtn = that.add.image(291, 427, 'exit')
     exitBtn.setScale(0.5)
     exitBtn.setDepth(5)
-    exitBtn.setInteractive()
+    exitBtn.setInteractive({ cursor: 'pointer' })
     exitBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play()
       PhaserNuxt.eventEmitter.emit('exit')

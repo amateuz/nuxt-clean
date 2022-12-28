@@ -37,14 +37,15 @@ const createGame = (config = {}) => {
     0, 5, 0, 0, 0, 0, 0, 3];
   var musicIdx = 0;
   var good = 0;
-  var wrong;
+  var wrong = [];
   var nextBarEvent;
   var end = false;
-  var that;
+  var that
+
   var arrange;
   let back;
 
-  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take'];
+  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target'];
   var musics = {};
   function preload() {
     that = this;
@@ -85,7 +86,9 @@ const createGame = (config = {}) => {
       ]);
     }
 
-    that.load.audio('wrong', 'game3/wrong.mp3');
+    for (let i = 1; i <= 3; ++i) {
+      that.load.audio('wrong' + i.toString(), 'game3/wrong' + i.toString() + '.mp3');
+    }
 
     commonMusics.forEach(x => that.load.audio(x, 'common/' + x + '.mp3'));
     that.load.image('close', 'common/close.png');
@@ -104,7 +107,9 @@ const createGame = (config = {}) => {
     }
 
     arrange = that.sound.add('arrange');
-    wrong = that.sound.add('wrong');
+    for (let i = 1; i <= 3; ++i) {
+      wrong.push(that.sound.add('wrong' + i.toString()));
+    }
 
     buttons = [
       that.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
@@ -121,13 +126,17 @@ const createGame = (config = {}) => {
 
     closeBtn = that.add.image(530, 70, 'close');
     closeBtn.setDepth(7);
-    closeBtn.setInteractive();
+    closeBtn.setInteractive({ cursor: 'pointer' });
     closeBtn.setScale(startPos.common.scale);
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play();
+      musics['button_add'].play();
       PhaserNuxt.eventEmitter.emit('close');
 
     });
+
+    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_add_target'].play()
+    })
   }
 
   function update() {
@@ -154,7 +163,9 @@ const createGame = (config = {}) => {
     });
 
     if (deleted.filter(x => x.state == 'active').length > 0) {
-      wrong.play();
+      const i = Math.floor(Math.random() * wrong.length);
+      console.log(i);
+      wrong[i].play();
     }
     deleted.forEach(x => x.destroy());
 
@@ -179,7 +190,7 @@ const createGame = (config = {}) => {
       var btn = that.add.image(info.x, info.y, info.img);
       btn.setScale(startPos.common.scale);
       btn.setDepth(info.depth);
-      btn.setInteractive();
+      btn.setInteractive({ cursor: 'pointer' });
       btn.on('pointerdown', function (pointer, localX, localY, event) {
         this.setTint(0xbbbbbb);
         that.time.delayedCall(300, () => this.clearTint());
@@ -230,7 +241,7 @@ const createGame = (config = {}) => {
       words.push(that.add.image(startPos.images['fail_text'].x, startPos.images['fail_text'].y, 'fail_text'));
     }
 
-    words.forEach(x => { console.log(x); x.setScale(startPos.common.scale); x.setDepth(5); });
+    words.forEach(x => {  x.setScale(startPos.common.scale); x.setDepth(5); });
 
     return words;
   }
@@ -242,7 +253,7 @@ const createGame = (config = {}) => {
     var startBtn = that.add.image(291, 480, 'start');
     startBtn.setScale(0.625);
     startBtn.setDepth(5);
-    startBtn.setInteractive();
+    startBtn.setInteractive({ cursor: 'pointer' });
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play();
       startGame();
@@ -250,6 +261,10 @@ const createGame = (config = {}) => {
       startBtn.destroy();
 
     });
+
+    startBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_common_target'].play()
+    })
   }
 
   function showEnd() {
@@ -263,7 +278,7 @@ const createGame = (config = {}) => {
     var restartBtn = that.add.image(292, 427, 'restart');
     restartBtn.setScale(0.625);
     restartBtn.setDepth(5);
-    restartBtn.setInteractive();
+    restartBtn.setInteractive({ cursor: 'pointer' });
 
     var res = showResult();
 
@@ -280,17 +295,25 @@ const createGame = (config = {}) => {
         exitBtn.destroy();
     });
 
+    restartBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_common_target'].play()
+    })
+
     if (getPercent() > 50) {
 
       var exitBtn = that.add.image(292, 483, 'exit');
       exitBtn.setScale(0.625);
       exitBtn.setDepth(5);
-      exitBtn.setInteractive();
+      exitBtn.setInteractive({ cursor: 'pointer' });
       exitBtn.on('pointerdown', function (pointer, localX, localY, event) {
         musics['button_common'].play();
         PhaserNuxt.eventEmitter.emit('exit');
 
       });
+
+      exitBtn.on('pointerover', function (pointer, localX, localY, event) {
+        musics['button_common_target'].play()
+      })
     }
   }
 
@@ -351,14 +374,13 @@ const createGame = (config = {}) => {
     if (oneBars
       .length
       > 0) {
-      console.log(oneBars[0].y);
+
       if (oneBars[0].y >= startGood && oneBars[0].y <= endGood) {
         {
           oneBars[0].setTint(0x00ff00);
           oneBars[0].state = 'inactive';
 
           var idx = btns.indexOf(btn);
-          console.log(idx);
           btnsSound[idx].play();
           ++good;
         }
@@ -367,8 +389,9 @@ const createGame = (config = {}) => {
           oneBars[0].setTint(0xff0000);
           oneBars[0].state = 'inactive';
 
-
-          wrong.play();
+          const i = Math.floor(Math.random() * wrong.length);
+          console.log(i);
+          wrong[i].play();
         }
       }
     }

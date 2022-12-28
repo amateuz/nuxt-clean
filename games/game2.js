@@ -13,7 +13,7 @@ const createGame = (config = {}) => {
   var closeBtn
   var restartBtn;
 
-  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take']
+  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'button_common_target', 'button_add', 'button_add_target']
   var musics = {}
 
   var gameImgs = [
@@ -137,12 +137,15 @@ const createGame = (config = {}) => {
   function showTutorial() {
     var tutorial = addImage('tutorial')
     var startBtn = addImage('start')
-    startBtn.setInteractive()
+    startBtn.setInteractive({ cursor: 'pointer' })
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play()
       startLevel()
       tutorial.destroy()
       startBtn.destroy()
+    })
+    startBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_common_target'].play()
     })
   }
 
@@ -156,9 +159,10 @@ const createGame = (config = {}) => {
     if (!restartBtn) {
       restartBtn = that.add.image(120, 100, 'restart');
       restartBtn.setDepth(7);
-      restartBtn.setInteractive();
+      restartBtn.setInteractive({ cursor: 'pointer' });
       restartBtn.setScale(startPos.common.scale);
       restartBtn.on('pointerdown', function (pointer, localX, localY, event) {
+        musics.button_add.play();
         restartLevel();
 
       });
@@ -181,7 +185,7 @@ const createGame = (config = {}) => {
     // console.log(pointsInLevels);
     pointsInLevels.forEach((p) => {
       var img = addImage(p.img, p.x, p.y, p.img)
-      img.setInteractive()
+      img.setInteractive({ cursor: 'pointer' })
       img.setDepth(2)
       img.on('pointerdown', function (pointer, localX, localY, event) {
         if (paintedLines.length == 0 || last == this || !last) {
@@ -217,7 +221,7 @@ const createGame = (config = {}) => {
               line = new Phaser.Geom.Line(start.x, start.y, start.x, start.y)
               lastPointIdx = curIdx
               last = this
-              musics['pic_set'].play()
+              musics.pic_set.play()
             }
           }
         }
@@ -289,7 +293,7 @@ const createGame = (config = {}) => {
     var exitBtn = that.add.image(291, 480, 'exit')
     exitBtn.setScale(0.625)
     exitBtn.setDepth(5)
-    exitBtn.setInteractive()
+    exitBtn.setInteractive({ cursor: 'pointer' })
     exitBtn.on('pointerdown', function (pointer, localX, localY, event) {
       musics['button_common'].play()
       PhaserNuxt.eventEmitter.emit('exit')
@@ -305,7 +309,7 @@ const createGame = (config = {}) => {
 
     that.load.image('close', 'common/close.png')
     that.load.image('restart', 'game2/restart.png')
-    commonMusics.forEach((x) => that.load.audio(x, 'common/' + x + '.mp3'))
+    commonMusics.forEach((x) => { console.log(x); that.load.audio(x, 'common/' + x + '.mp3')})
   }
 
   function create() {
@@ -324,11 +328,15 @@ const createGame = (config = {}) => {
 
     closeBtn = that.add.image(465, 100, 'close')
     closeBtn.setDepth(7)
-    closeBtn.setInteractive()
+    closeBtn.setInteractive({ cursor: 'pointer' })
     closeBtn.setScale(startPos.common.scale)
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play()
+      musics['button_add'].play()
       PhaserNuxt.eventEmitter.emit('close')
+    })
+
+    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
+      musics['button_add_target'].play()
     })
 
 
