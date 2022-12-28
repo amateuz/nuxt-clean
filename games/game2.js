@@ -147,18 +147,25 @@ const createGame = (config = {}) => {
     var startBtn = addImage('start')
     startBtn.setInteractive({ cursor: 'pointer' })
     startBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play()
+      playSound('button_common')
       startLevel()
       tutorial.destroy()
       startBtn.destroy()
     })
     startBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_common_target'].play()
+      playSound('button_common_target')
     })
   }
 
   function startGame() {}
 
+  function playSound(sound) {
+    if (!sound in musics) {
+      musics[sound] = that.sound.add(sound);
+    }
+
+    musics[sound].play()
+  }
   function startLevel() {
     if (!back) {
       back = addImage('background')
@@ -170,7 +177,7 @@ const createGame = (config = {}) => {
       restartBtn.setInteractive({ cursor: 'pointer' })
       restartBtn.setScale(startPos.common.scale)
       restartBtn.on('pointerdown', function (pointer, localX, localY, event) {
-        musics.button_add.play()
+        playSound('button_add')
         restartLevel()
       })
     }
@@ -197,7 +204,7 @@ const createGame = (config = {}) => {
       img.on('pointerdown', function (pointer, localX, localY, event) {
         if (paintedLines.length == 0 || last == this || !last) {
           if (!line) {
-            musics.pic_take.play()
+            playSound('pic_take')
           }
           last = img
           paint = true
@@ -228,7 +235,7 @@ const createGame = (config = {}) => {
               line = new Phaser.Geom.Line(start.x, start.y, start.x, start.y)
               lastPointIdx = curIdx
               last = this
-              musics.pic_set.play()
+              playSound('musics');
             }
           }
         }
@@ -291,7 +298,7 @@ const createGame = (config = {}) => {
   }
 
   function endGame() {
-    musics.win_common.play()
+    playSound('win_common')
     back.destroy()
     restartBtn.destroy()
 
@@ -302,7 +309,7 @@ const createGame = (config = {}) => {
     exitBtn.setDepth(5)
     exitBtn.setInteractive({ cursor: 'pointer' })
     exitBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_common'].play()
+      playSound('button_common')
       PhaserNuxt.eventEmitter.emit('exit')
     })
   }
@@ -331,7 +338,7 @@ const createGame = (config = {}) => {
 
     graphics.fillStyle(0xff0000)
 
-    commonMusics.forEach((x) => (musics[x] = that.sound.add(x)))
+    commonMusics.forEach((x) => { musics[x] = that.sound.add(x); })
 
     showTutorial()
 
@@ -340,12 +347,12 @@ const createGame = (config = {}) => {
     closeBtn.setInteractive({ cursor: 'pointer' })
     closeBtn.setScale(startPos.common.scale)
     closeBtn.on('pointerdown', function (pointer, localX, localY, event) {
-      musics['button_add'].play()
+      playSound('button_add')
       PhaserNuxt.eventEmitter.emit('close')
     })
 
     closeBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_add_target'].play()
+      playSound('button_add_target')
     })
 
     that.input.on(
