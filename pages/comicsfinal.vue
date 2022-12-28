@@ -93,7 +93,7 @@
                     'carousel-section__btn_red': !btnGreen,
                   },
                 ]"
-                href="https://t.me/+s3XyTFfAsmUyOTUy"
+                href="https://t.me/+-RSKS8P7NhplYmI6"
                 target="_blank"
               />
             </div>

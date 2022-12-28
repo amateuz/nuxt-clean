@@ -11,6 +11,52 @@
     <!--      gamestep-->
     <!--      {{ gameStep }}-->
     <!--    </div>-->
+    <section class="preload">
+      <nuxt-img :src="`/bgs/house-bg2.png`" />
+      <nuxt-img :src="`/bgs/btn-bg.png`" />
+      <nuxt-img :src="`/bgs/start-bg-3.png`" />
+      <template v-for="i in 10">
+        <nuxt-img :key="i" :src="`/btns/btn${i}-text.png`" />
+      </template>
+      <nuxt-img :src="`/btns/close.png`" />
+      <nuxt-img :src="`/btns/notice.png`" />
+      <template v-for="i in 6">
+        <nuxt-img :key="i + 10" :src="`/floors/floor${i}.png`" />
+        <nuxt-img :key="i + 70" :src="`/floors/floor${i}christmas.png`" />
+      </template>
+      <nuxt-img :src="`/floors/floor1christmas.png`" />
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 20" :src="`/game1/items/item${i}.png`" />
+        <nuxt-img :key="i + 30" :src="`/game1/items/item${i}out.png`" />
+      </template>
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 40" :src="`/game1/tracker${i}.png`" />
+      </template>
+      <nuxt-img :src="`/game1/game1-finish.png`" />
+      <nuxt-img :src="`/game1/game1-start.png`" />
+      <template v-for="i in 6">
+        <nuxt-img :key="i + 50" :src="`/tops/top${i}.png`" />
+      </template>
+      <template v-for="i in 5">
+        <nuxt-img :key="i + 80" :src="`/tops/top${i}christmas.png`" />
+      </template>
+      <template v-for="i in 6">
+        <nuxt-img :key="i + 60" :src="`/comics/frame${i}.svg`" />
+      </template>
+      <nuxt-img :src="`/house2.png`" />
+      <nuxt-img :src="`/popup-rules.png`" />
+      <nuxt-img :src="`/popup-magic.png`" />
+      <nuxt-img :src="`/popup-treasure.png`" />
+      <nuxt-img :src="`/tops/top1state2.png`" />
+      <nuxt-img :src="`/tops/top2state2.png`" />
+      <nuxt-img :src="`/tops/top3state2.png`" />
+      <nuxt-img :src="`/tops/top3state3.png`" />
+      <nuxt-img :src="`/tops/top123.png`" />
+      <nuxt-img :src="`/tops/top124.png`" />
+      <nuxt-img :src="`/tops/topall.png`" />
+      <audio src="/sounds/button_common.mp3" />
+      <audio src="/sounds/pageTurn.mp3" />
+    </section>
     <div
       class="house-page__container"
       :class="{ [`house-page__container_blur-content`]: showModal }"
@@ -76,7 +122,7 @@
                     <DialogView
                       :id="floorNum"
                       bottom="102%"
-                      right="40%"
+                      right="18%"
                       :dialogs="dialogs[13].content"
                       :dialog-num="dialogs[13].timesClicked"
                       :visible="true"
@@ -840,7 +886,6 @@ export default {
   },
   watch: {
     curGame(newValue) {
-      console.log(newValue)
       this.setFloorCookie(newValue)
       if (newValue > 1) setPhaserFocus()
     },
@@ -866,8 +911,13 @@ export default {
   },
   beforeCreate() {},
   created() {
-    this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
-    this.curGame = this.floorCookieValue
+    const floorCookie = this.getFloorCookie(this.floorCookieName)
+    if (!floorCookie || isNaN(floorCookie)) {
+      this.floorCookieValue = 1
+    } else {
+      this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
+    }
+    this.curGame = 1 // this.floorCookieValue
     this.gameStep = 1
   },
   beforeDestroy() {
@@ -1085,6 +1135,7 @@ export default {
   left: 0;
   z-index: 30;
 }
+
 .no-interaction {
   cursor: default;
 
@@ -1192,6 +1243,15 @@ a {
     &:active {
       transform: translate(0, 5px) !important;
     }
+  }
+}
+
+.preload {
+  display: none;
+
+  img {
+    width: 0;
+    height: 0;
   }
 }
 
