@@ -17,10 +17,7 @@ const createGame = (config = {}) => {
     'button_common',
     'win_common',
     'pic_set',
-    'pic_take',
-    'button_common_target',
-    'button_add',
-    'button_add_target',
+    'pic_take'
   ]
   var musics = {}
 
@@ -160,11 +157,11 @@ const createGame = (config = {}) => {
   function startGame() {}
 
   function playSound(sound) {
-    if (!sound in musics) {
+    if (!(sound in musics)) {
       musics[sound] = that.sound.add(sound);
     }
 
-    musics[sound].play()
+    if (musics[sound]) musics[sound].play()
   }
   function startLevel() {
     if (!back) {
