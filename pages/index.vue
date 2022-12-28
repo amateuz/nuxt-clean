@@ -107,6 +107,7 @@ export default {
     border-radius: 20px;
     margin-bottom: max(15px, 2%);
     transition: transform 0.1s ease;
+    transform: translateX(5%);
 
     @media (max-width: 500px) {
       margin-bottom: max(50px, 15%);
@@ -114,12 +115,12 @@ export default {
 
     &:hover {
       filter: brightness(105%);
-      transform: scale(1.05);
+      transform: scale(1.05) translateX(5%);
     }
 
     &:active {
       box-shadow: none;
-      transform: translate(0, 2px);
+      transform: translate(5%, 2px);
     }
   }
 }

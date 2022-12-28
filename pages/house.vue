@@ -41,6 +41,7 @@
                 />
                 <template v-if="floorNum === 1">
                   <div
+                    v-if="curGame === 6 && gameStep < 2"
                     :class="`floor__top top top_${floorCount - floorNum + 1}`"
                   >
                     <DialogView
@@ -59,6 +60,30 @@
                       :src="`/tops/top${floorCount - floorNum + 1}.png`"
                       :alt="`top ${floorCount - floorNum + 1} image`"
                       @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 6 && gameStep === 2"
+                    :class="`floor__top top top_all`"
+                  >
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="40%"
+                      :dialogs="dialogs[13].content"
+                      :dialog-num="dialogs[13].timesClicked"
+                      :visible="true"
+                      :visibility-timeout="1500"
+                      dialog-origin="center-bottom"
+                      @play="playSound"
+                    />
+                    <nuxt-img
+                      preload
+                      placeholder
+                      class="top__img"
+                      :src="`/tops/topall.png`"
+                      :alt="`top ${floorCount - floorNum + 1} image`"
                       @load="onImgLoad"
                     />
                   </div>
@@ -112,6 +137,7 @@
                 </template>
                 <template v-if="floorNum === 4">
                   <div
+                    v-if="(curGame === 3 && gameStep === 1) || curGame < 3"
                     :class="`floor__top top top_${floorCount - floorNum + 1}`"
                   >
                     <DialogView
@@ -130,6 +156,83 @@
                       :alt="`top ${floorCount - floorNum + 1} image`"
                       @click.prevent="runDialog($event, floorNum - 1)"
                       @load="onImgLoad"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 3 && gameStep === 2"
+                    :class="`floor__top top top_3_state_2`"
+                  >
+                    <nuxt-img
+                      preload
+                      placeholder
+                      :src="`/tops/top3state2.png`"
+                      :alt="`top ${floorCount - floorNum + 1} image`"
+                      @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="30%"
+                      :dialogs="dialogs[10].content"
+                      :dialog-num="dialogs[10].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visibility-timeout="500"
+                      :hiding-timeout="3000"
+                      :visible="true"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 3 && gameStep === 2"
+                    :class="`floor__top top top_2_state_2`"
+                  >
+                    <nuxt-img
+                      preload
+                      placeholder
+                      :src="`/tops/top2state2.png`"
+                      :alt="`top 2 image`"
+                      @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="30%"
+                      :dialogs="dialogs[11].content"
+                      :dialog-num="dialogs[11].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visibility-timeout="3500"
+                      :hiding-timeout="7000"
+                      :visible="true"
+                    />
+                  </div>
+                  <div
+                    v-if="curGame === 3 && gameStep === 2"
+                    :class="`floor__top top top_1_state_2`"
+                  >
+                    <nuxt-img
+                      preload
+                      placeholder
+                      :src="`/tops/top1christmas.png`"
+                      :alt="`top 1 image`"
+                      @click.prevent="runDialog($event, floorNum - 1)"
+                      @load="onImgLoad"
+                    />
+                    <DialogView
+                      :id="floorNum"
+                      bottom="102%"
+                      right="30%"
+                      :dialogs="dialogs[12].content"
+                      :dialog-num="dialogs[12].timesClicked"
+                      dialog-origin="right-bottom"
+                      :visibility-timeout="10500"
+                      :hiding-timeout="14000"
+                      :visible="true"
+                      @end="
+                        gameStep = 0
+                        curGame = 4
+                        showModal = true
+                      "
                     />
                   </div>
                 </template>
@@ -559,8 +662,8 @@ export default {
   beforeCreate() {},
   created() {
     this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
-    this.curGame = 4 // this.floorCookieValue
-    this.gameStep = 1
+    this.curGame = 6 // this.floorCookieValue
+    this.gameStep = 2
   },
   beforeDestroy() {
     if (this.audio) this.audio.pause()
@@ -580,6 +683,8 @@ export default {
   },
   computed: {},
   methods: {
+    playSound() {},
+
     async dialogBtnClicked(event, floorNum) {
       this.showModal = true
       if (this.curGame > 1) {
@@ -700,6 +805,9 @@ export default {
       }, 200)
     },
     magicClosed() {
+      if (this.curGame === 4 && this.gameStep === 0)
+        window.open('/comicsfinal/', '_self')
+
       this.showModal = false
       this.gameStep = 1
     },
@@ -859,6 +967,10 @@ a {
   position: absolute;
   // visibility: hidden;
 
+  img {
+    max-height: 100%;
+  }
+
   &:hover {
     cursor: pointer;
     transition: transform 0.15s ease-in;
@@ -866,6 +978,18 @@ a {
     transform-origin: center bottom;
 
     //filter: drop-shadow(0 0 45px rgb(82, 216, 215));
+  }
+
+  &_all {
+    position: absolute;
+    bottom: -9.5%;
+    z-index: 3;
+    height: 78%;
+    left: 21.5%;
+
+    img {
+      max-height: 100%;
+    }
   }
 
   &_1 {
@@ -898,18 +1022,37 @@ a {
         }
       }
     }
+
+    &_state_2 {
+      position: absolute;
+      height: 56%;
+      bottom: 0;
+      left: 43%;
+    }
   }
 
   &_2 {
     right: 35.5%;
     bottom: -0.8%;
     width: 8%;
+
+    &_state_2 {
+      bottom: 0;
+      height: 54%;
+      left: 22%;
+    }
   }
 
   &_3 {
     right: 61.8%;
     bottom: -0.5%;
     width: 11.8%;
+
+    &_state_2 {
+      bottom: -3%;
+      height: 46%;
+      left: 31%;
+    }
   }
 
   &_4 {
@@ -920,7 +1063,7 @@ a {
 
   &_5 {
     right: 24%;
-    bottom: 2%;
+    bottom: 1.1%;
     width: 10.1%;
   }
 
@@ -989,9 +1132,9 @@ a {
   }
 
   &_5 {
-    top: 26%;
-    right: 19.5%;
-    width: 72%;
+    top: 13.5%;
+    right: 20.35%;
+    width: 70.6%;
     height: auto;
   }
 
@@ -1043,6 +1186,14 @@ a {
   &__item {
     display: none;
     position: absolute;
+
+    &:not(.no-iteraction) {
+      cursor: pointer;
+
+      &:hover {
+        filter: drop-shadow(0px 0px 4px #fefa9c);
+      }
+    }
 
     &_1 {
       display: block;

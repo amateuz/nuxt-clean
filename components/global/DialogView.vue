@@ -9,7 +9,15 @@
     }"
     :style="getStyle"
   >
-    <div class="dialog__content">
+    <div
+      class="dialog__content"
+      :class="{ dialog__content_play: hasPlayButton }"
+    >
+      <Btn
+        v-if="hasPlayButton"
+        class="dialog__play-btn"
+        @click="$emit('play')"
+      />
       <div class="dialog__text" v-html="dialogText" />
       <Btn
         v-if="hasButton"
@@ -107,7 +115,6 @@ export default {
     }
   },
   created() {
-    console.log(`dialog ${this.id} created!`)
     if (this.visibilityTimeout > 0) {
       this.isDisabled = true
       setTimeout(() => {
@@ -115,7 +122,6 @@ export default {
       }, this.visibilityTimeout)
     }
     if (this.hidingTimeout > 0) {
-      console.log(`hiding timeout ${this.hidingTimeout}`)
       setTimeout(() => {
         this.isDisabled = true
         setTimeout(() => {
@@ -148,6 +154,9 @@ export default {
     },
     hasButton() {
       return this.dialogs[this.getDialogNum].button !== undefined
+    },
+    hasPlayButton() {
+      return this.dialogs[this.getDialogNum].playButton !== undefined
     },
     getButtonText() {
       return this.dialogs[this.getDialogNum].button?.text
@@ -228,6 +237,17 @@ export default {
     justify-content: center;
 
     height: 100%;
+
+    &_play {
+      flex-direction: row;
+
+      .dialog__play-btn {
+        flex-basis: 30%;
+      }
+      .dialog__text {
+        flex-basis: 70%;
+      }
+    }
   }
 
   &__btn {
@@ -236,6 +256,15 @@ export default {
     min-height: 28px;
     margin-top: 10px;
     padding: 2px 5px;
+  }
+
+  &__play-btn {
+    background: url('@/static/btns/play.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 35px;
+    height: 35px;
+    width: 35px;
+    margin-right: 8px;
   }
 
   &__text {
@@ -269,6 +298,12 @@ export default {
   }
   &_right-bottom {
     transform-origin: right bottom;
+  }
+  &_center-bottom {
+    transform-origin: center bottom;
+  }
+  &_center-center {
+    transform-origin: center center;
   }
 }
 </style>

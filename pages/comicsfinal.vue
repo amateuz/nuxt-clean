@@ -13,12 +13,12 @@
             >
               <div class="carousel__slide slide">
                 <div class="slide__content">
-                  <nuxt-img src="/carousel/slide1.png" />
+                  <nuxt-img src="/carousel2/slide1.png" />
                 </div>
               </div>
               <div class="carousel__slide slide">
                 <div class="slide__content">
-                  <nuxt-img src="/carousel/slide2.png" />
+                  <nuxt-img src="/carousel2/slide2.png" />
                 </div>
               </div>
 
@@ -46,22 +46,17 @@
             >
               <div class="carousel__slide slide">
                 <div class="slide__content">
-                  <nuxt-img src="/carousel/mobile/slide1.png" />
+                  <nuxt-img src="/carousel2/mobile/slide1.png" />
                 </div>
               </div>
               <div class="carousel__slide slide">
                 <div class="slide__content">
-                  <nuxt-img src="/carousel/mobile/slide2.png" />
+                  <nuxt-img src="/carousel2/mobile/slide2.png" />
                 </div>
               </div>
               <div class="carousel__slide slide">
                 <div class="slide__content">
-                  <nuxt-img src="/carousel/mobile/slide3.png" />
-                </div>
-              </div>
-              <div class="carousel__slide slide">
-                <div class="slide__content">
-                  <nuxt-img src="/carousel/mobile/slide4.png" />
+                  <nuxt-img src="/carousel2/mobile/slide3.png" />
                 </div>
               </div>
               <template #prevArrow>
@@ -79,17 +74,29 @@
                 />
               </template>
             </VueSlickCarousel>
-            <NuxtLink
-              @click.native="playBtnClick"
-              class="carousel-section__btn"
-              :class="[
-                { 'carousel-section__btn_green': btnGreen },
-                {
-                  'carousel-section__btn_red': !btnGreen,
-                },
-              ]"
-              to="/house"
-            />
+            <div class="carousel-section__btn-wrapper">
+              <NuxtLink
+                v-show="showReturnBtn"
+                @click.native="playBtnClick"
+                class="carousel-section__btn carousel-section__btn_red"
+                to="/house"
+              />
+              <a
+                @click="
+                  playBtnClick()
+                  showReturnBtn = true
+                "
+                class="carousel-section__btn"
+                :class="[
+                  { 'carousel-section__btn_green': btnGreen },
+                  {
+                    'carousel-section__btn_red': !btnGreen,
+                  },
+                ]"
+                href="https://t.me/+s3XyTFfAsmUyOTUy"
+                target="_blank"
+              />
+            </div>
           </div>
         </div>
       </template>
@@ -103,7 +110,7 @@ import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 
 export default {
-  name: 'Comics',
+  name: 'ComicsFinal',
   components: { VueSlickCarousel },
   computed: {
     getVuetifyBreakpoint() {
@@ -112,6 +119,8 @@ export default {
   },
   data() {
     return {
+      showReturnBtn: true,
+      eventListener: null,
       carouselItemNum: 0,
       krampusMobile: [],
       krampus: [],
@@ -129,22 +138,37 @@ export default {
   methods: {
     onChange(oldSlideIndex, newSlideIndex) {
       this.carouselItemNum = newSlideIndex
-      this.krampus.forEach((k) => {
-        k.pause()
-        k.currentTime = 0
-      })
-      this.krampusMobile.forEach((k) => {
-        k.pause()
-        k.currentTime = 0
-      })
 
-      if (this.$vuetify.breakpoint.mdAndUp) {
-        this.btnGreen = newSlideIndex !== 1
-        this.krampus[newSlideIndex].play()
-      } else if (this.$vuetify.breakpoint.smAndDown) {
-        this.btnGreen = newSlideIndex !== 3
-        this.krampusMobile[newSlideIndex].play()
+      if (newSlideIndex !== 2) {
+        this.krampus.forEach((k) => {
+          k.pause()
+          k.currentTime = 0
+        })
+        this.krampusMobile.forEach((k) => {
+          k.pause()
+          k.currentTime = 0
+        })
       }
+
+      // if (this.$vuetify.breakpoint.mdAndUp) {
+      // this.btnGreen = newSlideIndex !== 1
+      if (newSlideIndex === 0) {
+        this.krampus[newSlideIndex].play()
+        this.eventListener = this.krampus[newSlideIndex].addEventListener(
+          'ended',
+          () => {
+            this.krampus[newSlideIndex + 1].play()
+          }
+        )
+      } else if (newSlideIndex <= 1) {
+        if (this.eventListener !== null)
+          this.krampus[0].removeEventListener('ended', this.eventListener)
+        this.krampus[2].play()
+      }
+      // } else if (this.$vuetify.breakpoint.smAndDown) {
+      // this.btnGreen = newSlideIndex !== 3
+      // this.krampusMobile[newSlideIndex].play()
+      // }
     },
     playTurnSound() {
       const audio = new Audio('/sounds/pageTurn.mp3')
@@ -170,13 +194,20 @@ export default {
   mounted() {
     if (!this.audio) this.playBackgroundSound()
     this.$nextTick(() => {
-      for (let i = 1; i <= 4; i++) {
-        if (i <= 2) this.krampus.push(new Audio(`/sounds/Krampus${i}.mp3`))
+      for (let i = 5; i <= 7; i++) {
+        // if (i <= 2) this.krampus.push(new Audio(`/sounds/Krampus${i}.mp3`))
+        this.krampus.push(new Audio(`/sounds/Krampus${i}_mobile.mp3`))
         this.krampusMobile.push(new Audio(`/sounds/Krampus${i}_mobile.mp3`))
       }
 
-      if (this.$vuetify.breakpoint.smAndDown) this.krampusMobile[0].play()
-      else this.krampus[0].play()
+      // if (this.$vuetify.breakpoint.smAndDown) this.krampusMobile[0].play()
+      // else {
+      this.krampus[0].play()
+      this.eventListener = this.krampus[0].addEventListener('ended', () => {
+        this.krampus[1].play()
+        this.krampus[0].removeEventListener('ended', this.eventListener)
+      })
+      // }
     })
   },
   beforeDestroy() {
@@ -256,7 +287,7 @@ export default {
 
   &__btn {
     &_green {
-      background-image: url('~static/btns/btn1-text.png');
+      background-image: url('~static/btns/btn9-text.png');
     }
     &_red {
       background-image: url('~static/btns/btn7-text.png');
@@ -265,17 +296,18 @@ export default {
     background: no-repeat center;
     background-size: cover;
     display: block;
-    width: calc(238.33px * var(--scale));
-    height: calc(75px * var(--scale));
+    width: calc(256px * var(--scale));
+    height: calc(56px * var(--scale));
     box-shadow: 0 3.33333px 0 #56171f,
       inset 0 1.66667px 0 rgba(255, 255, 255, 0.25);
     border-radius: 20px;
     transition: transform 0.1s ease;
     transform-origin: center center;
+    margin: 10px;
 
-    position: absolute;
-    bottom: -7%;
-    left: 50%;
+    // position: absolute;
+    // bottom: -7%;
+    // left: 50%;
     transform: translateX(-50%);
 
     &:hover {
@@ -286,6 +318,25 @@ export default {
     &:active {
       box-shadow: none;
       transform: translate(-50%, 2px);
+    }
+
+    &-wrapper {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: absolute;
+      bottom: -7%;
+      left: 50%;
+      transform: translateX(-26.5%);
+      flex-wrap: wrap;
+
+      @media (max-width: 650px) {
+        transform: translateX(-17.5%);
+      }
+
+      @media (max-width: 475px) {
+        transform: translateX(-12.5%);
+      }
     }
   }
 }
