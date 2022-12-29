@@ -1243,6 +1243,7 @@ a {
     max-width: 10vh;
     max-height: 10vh;
     transition: all 0.05s ease;
+    z-index: 50;
 
     &:hover {
       cursor: pointer;
