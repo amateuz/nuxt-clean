@@ -574,9 +574,17 @@
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-  -->{{getMagicWord(1) + ' ' +  getMagicWord(2) + ' ' + getMagicWord(3) + '\n\n' + 'Отправь полученное заклинание аудиосообщением'}}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank">в телеграм-канал</a>{{
-', чтобы прогнать Крампуса\nи заработать памятные призы.'
-              }}
+  -->{{
+                getMagicWord(1) +
+                ' ' +
+                getMagicWord(2) +
+                ' ' +
+                getMagicWord(3) +
+                '\n\n' +
+                'Отправь полученное заклинание аудиосообщением'
+              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
+                >в телеграм-канал</a
+              >{{ ', чтобы прогнать Крампуса\nи заработать памятные призы.' }}
             </div>
             <Btn
               w="37%"
@@ -622,7 +630,8 @@
               -->{{
                 (
                   getMagicWord(1) +
-                  +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                  '\n\n' +
+                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
                 ).trim()
               }}
             </div>
@@ -783,8 +792,17 @@
             </template>
             <template v-else-if="curGame === 4">
               <!--
-  -->{{getMagicWord(1) + ' ' +  getMagicWord(2) + ' ' + getMagicWord(3) + '\n\n' + 'Отправь полученное заклинание аудиосообщением'}}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank">в телеграм-канал</a>{{', чтобы прогнать Крампуса\nи заработать памятные призы.'
-              }}
+  -->{{
+                getMagicWord(1) +
+                ' ' +
+                getMagicWord(2) +
+                ' ' +
+                getMagicWord(3) +
+                '\n\n' +
+                'Отправь полученное заклинание аудиосообщением'
+              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
+                >в телеграм-канал</a
+              >{{ ', чтобы прогнать Крампуса\nи заработать памятные призы.' }}
             </template>
           </div>
           <Btn
@@ -900,7 +918,7 @@ export default {
     } else {
       this.floorCookieValue = this.getFloorCookie(this.floorCookieName)
     }
-    this.curGame = 6 // this.floorCookieValue
+    this.curGame = this.floorCookieValue
     this.gameStep = 1
   },
   beforeDestroy() {
@@ -958,7 +976,7 @@ export default {
               this.createGame = null
               this.closeModalAndMoveGame()
               if (this.audio.paused) {
-                this.audio.play();
+                this.audio.play()
               }
             },
             this
