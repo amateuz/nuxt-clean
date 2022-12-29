@@ -74,13 +74,13 @@
           <template v-for="floorNum in floorCount">
             <div
               :key="floorNum"
+              :ref="`floor${floorCount - floorNum + 1}`"
               :class="[
                 `sber-house__floor floor floor_${floorCount - floorNum + 1}`,
                 {
                   [`floor_disabled`]: curGame < floorCount - floorNum + 1,
                 },
               ]"
-              :ref="`floor${floorCount - floorNum + 1}`"
             >
               <div class="floor__content">
                 <nuxt-img
@@ -536,8 +536,8 @@
                     <!--                      :hiding-timeout="1100"-->
                     <!--                    />-->
                     <DialogView
-                      :id="8"
                       v-if="gameStep === 3"
+                      :id="8"
                       class="top__dialog_top6_christmas"
                       :dialogs="dialogs[7].content"
                       :dialog-num="dialogs[7].timesClicked"
@@ -593,8 +593,7 @@
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-        -->
-              {{
+           -->{{
                 getMagicWord(1) +
                 ' ' +
                 getMagicWord(2) +
@@ -623,7 +622,7 @@
               {{
                 (
                   getMagicWord(2) +
-                  +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
                 ).trim()
               }}
             </div>
@@ -703,16 +702,16 @@
               <template v-for="i in 5">
                 <nuxt-img
                   v-if="!imgClicked[i - 1]"
-                  preload
                   :key="i"
+                  preload
                   :class="[`game1__item game1__item_${i}`]"
                   :src="`/game1/items/item${i}out.png`"
                   @click.native="onImgClicked($event, i - 1)"
                 />
                 <nuxt-img
                   v-else
-                  preload
                   :key="i + 10"
+                  preload
                   :class="[
                     `game1__item game1__item_${i}`,
                     { 'no-interaction': i === 1 },
@@ -721,8 +720,8 @@
                   @click.native="onImgClicked($event, i - 1)"
                 />
                 <nuxt-img
-                  preload
                   :key="i + 20"
+                  preload
                   :src="`game1/tracker${i - 1}.png`"
                   class="game1__tracker game-tracker"
                   :class="{
@@ -953,7 +952,6 @@ export default {
       this.scrollToElement()
     })
   },
-  computed: {},
   methods: {
     goToTelegram() {
       this.showModal = false
@@ -1270,6 +1268,7 @@ a {
     max-width: 10vh;
     max-height: 10vh;
     transition: all 0.05s ease;
+    z-index: 50;
 
     &:hover {
       cursor: pointer;
