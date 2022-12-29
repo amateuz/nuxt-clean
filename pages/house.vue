@@ -575,17 +575,19 @@
             <div class="notice__treasure_text">
               <!--
         -->{{
-              'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
+                'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
               }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="10"
-                 br="35"
-                 class="notice__btn"
-                 @click="goToTelegram" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="10"
+              br="35"
+              class="notice__btn"
+              @click="goToTelegram"
+            />
           </div>
         </template>
         <template v-else-if="curGame >= 4">
@@ -593,7 +595,7 @@
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-           -->{{
+              -->{{
                 getMagicWord(1) +
                 ' ' +
                 getMagicWord(2) +
@@ -601,16 +603,20 @@
                 getMagicWord(3) +
                 '\n\n' +
                 'Отправь полученное заклинание аудиосообщением'
-              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank">в телеграм-канал</a>{{ ', чтобы прогнать Крампуса\nи заработать памятные призы.' }}
+              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
+                >в телеграм-канал,</a
+              >{{ 'чтобы прогнать Крампуса\nи заработать памятные призы.' }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
         <template v-else-if="curGame >= 3">
@@ -618,22 +624,24 @@
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-        -->
-              {{
+              -->{{
                 (
                   getMagicWord(2) +
+                  '\n\n' +
                   'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
                 ).trim()
               }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
         <template v-else-if="curGame >= 2">
@@ -650,27 +658,31 @@
                 ).trim()
               }}
             </div>
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
         <template v-else>
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-rules.png" />
-            <Btn w="37%"
-                 h="10%"
-                 max-w="160px"
-                 max-h="50px"
-                 bg="6"
-                 br="35"
-                 class="notice__btn"
-                 @click="noticeClosed" />
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="noticeClosed"
+            />
           </div>
         </template>
       </template>
@@ -803,7 +815,7 @@
             </template>
             <template v-else-if="curGame === 4">
               <!--
-  -->{{
+              -->{{
                 getMagicWord(1) +
                 ' ' +
                 getMagicWord(2) +
@@ -812,8 +824,8 @@
                 '\n\n' +
                 'Отправь полученное заклинание аудиосообщением'
               }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
-                >в телеграм-канал</a
-              >{{ ', чтобы прогнать Крампуса\nи заработать памятные призы.' }}
+                >в телеграм-канал,</a
+              >{{ 'чтобы прогнать Крампуса\nи заработать памятные призы.' }}
             </template>
           </div>
           <Btn
@@ -1184,8 +1196,7 @@ a {
 .notice {
   position: relative;
 
-  &__text
-  {
+  &__text {
     position: absolute;
     top: 39%;
     max-width: 50%;
