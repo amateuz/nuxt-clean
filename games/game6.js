@@ -47,7 +47,7 @@ const createGame = (config = {}) => {
   var bubble;
 
 
-  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'wearing'];
+  var commonMusics = ['button_common', 'win_common', 'pic_set', 'pic_take', 'wearing', 'button_add'];
   var musics = {};
 
   function preload() {
