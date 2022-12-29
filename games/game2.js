@@ -17,7 +17,8 @@ const createGame = (config = {}) => {
     'button_common',
     'win_common',
     'pic_set',
-    'pic_take'
+    'pic_take',
+    'button_add'
   ]
   var musics = {}
 
@@ -149,16 +150,16 @@ const createGame = (config = {}) => {
       tutorial.destroy()
       startBtn.destroy()
     })
-    startBtn.on('pointerover', function (pointer, localX, localY, event) {
-      playSound('button_common_target')
-    })
+
   }
 
   function startGame() {}
 
   function playSound(sound) {
     if (!(sound in musics)) {
-      musics[sound] = that.sound.add(sound);
+
+        musics[sound] = that.sound.add(sound);
+      
     }
 
     if (musics[sound]) musics[sound].play()
@@ -193,7 +194,7 @@ const createGame = (config = {}) => {
     var level = 'level' + curLevel.toString()
 
     var pointsInLevels = levels[level].points
-    // console.log(pointsInLevels);
+
     pointsInLevels.forEach((p) => {
       var img = addImage(p.img, p.x, p.y, p.img)
       img.setInteractive({ cursor: 'pointer' })
@@ -217,7 +218,7 @@ const createGame = (config = {}) => {
           lastPointIdx = points.indexOf(last)
 
           if (start != null) {
-            // console.log(remainLinks)
+
             var path = remainLinks.find((x) => {
               return (
                 (x.start === lastPointIdx && x.end === curIdx) ||
@@ -232,7 +233,7 @@ const createGame = (config = {}) => {
               line = new Phaser.Geom.Line(start.x, start.y, start.x, start.y)
               lastPointIdx = curIdx
               last = this
-              playSound('musics')
+              playSound('win_common')
             }
           }
         }
@@ -327,7 +328,7 @@ const createGame = (config = {}) => {
 
   function create() {
     let { width, height } = that.sys.game.canvas
-    // console.log('create')
+
     this.scale.displaySize.setAspectRatio(width / height)
     this.scale.refresh()
 
@@ -350,9 +351,6 @@ const createGame = (config = {}) => {
       PhaserNuxt.eventEmitter.emit('close')
     })
 
-    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
-      playSound('button_add_target')
-    })
 
     that.input.on(
       'pointerup',
@@ -366,7 +364,7 @@ const createGame = (config = {}) => {
     that.input.on(
       'pointermove',
       function (pointer) {
-        if (start != null) {
+        if (start != null && line != null) {
           line.setTo(start.x, start.y, pointer.x, pointer.y)
         }
       },
@@ -397,6 +395,9 @@ const createGame = (config = {}) => {
       arcade: {
         gravity: { y: 0 },
       },
+    },
+    audio: {
+      disableWebAudio: true
     },
     scene: {
       preload: preload,

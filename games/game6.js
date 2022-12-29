@@ -88,9 +88,7 @@ const createGame = (config = {}) => {
 
     });
 
-    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_add_target'].play()
-    })
+
 
   }
 
@@ -370,6 +368,9 @@ const createGame = (config = {}) => {
       height: 900,
     },
     transparent: true,
+    audio: {
+      disableWebAudio: true
+    },
   })
 }
 

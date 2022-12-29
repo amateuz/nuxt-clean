@@ -159,10 +159,6 @@ const createGame = (config = {}) => {
       PhaserNuxt.eventEmitter.emit('close');
 
     });
-
-    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_add_target'].play()
-    })
   }
 
   function resetLevel() {
@@ -359,6 +355,9 @@ const createGame = (config = {}) => {
       mode: Phaser.Scale.FIT,
       width: 585,
       height: 800,
+    },
+    audio: {
+      disableWebAudio: true
     },
     transparent: true,
     ...config,

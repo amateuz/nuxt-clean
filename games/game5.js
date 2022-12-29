@@ -71,8 +71,6 @@ const createGame = (config = {}) => {
       }
     }
 
-    console.log("right " + right.toString());
-
     if (right === 4) {
       return true;
     }
@@ -91,7 +89,6 @@ const createGame = (config = {}) => {
     that.input.on('dragstart', function (pointer, gameObject) {
       musics.pic_take.play();
       startDrag = { 'x': gameObject.x, 'y': gameObject.y };
-      console.log("start: " + startDrag.toString());
       gameObject.setDepth(2);
       for (let i = 1; i <= 4; ++i) {
 
@@ -221,9 +218,7 @@ const createGame = (config = {}) => {
 
     });
 
-    startBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_common_target'].play()
-    })
+
   }
 
   function startLevel() {
@@ -313,9 +308,7 @@ const createGame = (config = {}) => {
       PhaserNuxt.eventEmitter.emit('exit');
 
     });
-    exitBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_common_target'].play()
-    })
+
   }
 
   return new Phaser.Game({
@@ -324,6 +317,9 @@ const createGame = (config = {}) => {
     width: 585,
     height: 800,
     transparent: true,
+    audio: {
+      disableWebAudio: true
+    },
     physics: {
       default: 'arcade',
       arcade: {

@@ -134,9 +134,6 @@ const createGame = (config = {}) => {
 
     });
 
-    closeBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_add_target'].play()
-    })
   }
 
   function update() {
@@ -164,7 +161,7 @@ const createGame = (config = {}) => {
 
     if (deleted.filter(x => x.state == 'active').length > 0) {
       const i = Math.floor(Math.random() * wrong.length);
-      console.log(i);
+ 
       wrong[i].play();
     }
     deleted.forEach(x => x.destroy());
@@ -262,9 +259,7 @@ const createGame = (config = {}) => {
 
     });
 
-    startBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_common_target'].play()
-    })
+
   }
 
   function showEnd() {
@@ -295,9 +290,6 @@ const createGame = (config = {}) => {
         exitBtn.destroy();
     });
 
-    restartBtn.on('pointerover', function (pointer, localX, localY, event) {
-      musics['button_common_target'].play()
-    })
 
     if (getPercent() > 50) {
 
@@ -311,9 +303,6 @@ const createGame = (config = {}) => {
 
       });
 
-      exitBtn.on('pointerover', function (pointer, localX, localY, event) {
-        musics['button_common_target'].play()
-      })
     }
   }
 
@@ -390,7 +379,6 @@ const createGame = (config = {}) => {
           oneBars[0].state = 'inactive';
 
           const i = Math.floor(Math.random() * wrong.length);
-          console.log(i);
           wrong[i].play();
         }
       }
@@ -414,7 +402,9 @@ const createGame = (config = {}) => {
       update: update,
     },
     transparent: true,
-
+    audio: {
+      disableWebAudio: true
+    },
     scale: {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       parent: 'phaser',
