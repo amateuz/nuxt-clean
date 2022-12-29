@@ -569,12 +569,32 @@
       "
     >
       <template v-if="isModalPopupRules">
-        <template v-if="curGame >= 4">
+        <template v-if="curGame === 6 && gameStep >= 4">
+          <div class="notice">
+            <nuxt-img class="notice__img" src="/popup-treasure.png" />
+            <div class="notice__treasure_text">
+              <!--
+        -->{{
+              'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
+              }}
+            </div>
+            <Btn w="37%"
+                 h="10%"
+                 max-w="160px"
+                 max-h="50px"
+                 bg="10"
+                 br="35"
+                 class="notice__btn"
+                 @click="goToTelegram" />
+          </div>
+        </template>
+        <template v-else-if="curGame >= 4">
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-  -->{{
+        -->
+              {{
                 getMagicWord(1) +
                 ' ' +
                 getMagicWord(2) +
@@ -582,20 +602,16 @@
                 getMagicWord(3) +
                 '\n\n' +
                 'Отправь полученное заклинание аудиосообщением'
-              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
-                >в телеграм-канал</a
-              >{{ ', чтобы прогнать Крампуса\nи заработать памятные призы.' }}
+              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank">в телеграм-канал</a>{{ ', чтобы прогнать Крампуса\nи заработать памятные призы.' }}
             </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
+            <Btn w="37%"
+                 h="10%"
+                 max-w="160px"
+                 max-h="50px"
+                 bg="6"
+                 br="35"
+                 class="notice__btn"
+                 @click="noticeClosed" />
           </div>
         </template>
         <template v-else-if="curGame >= 3">
@@ -603,23 +619,22 @@
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-              -->{{
+        -->
+              {{
                 (
                   getMagicWord(2) +
                   +'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
                 ).trim()
               }}
             </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
+            <Btn w="37%"
+                 h="10%"
+                 max-w="160px"
+                 max-h="50px"
+                 bg="6"
+                 br="35"
+                 class="notice__btn"
+                 @click="noticeClosed" />
           </div>
         </template>
         <template v-else-if="curGame >= 2">
@@ -627,7 +642,8 @@
             <nuxt-img class="notice__img" src="/popup-magic.png" />
             <div class="notice__text">
               <!--
-              -->{{
+        -->
+              {{
                 (
                   getMagicWord(1) +
                   '\n\n' +
@@ -635,31 +651,27 @@
                 ).trim()
               }}
             </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
+            <Btn w="37%"
+                 h="10%"
+                 max-w="160px"
+                 max-h="50px"
+                 bg="6"
+                 br="35"
+                 class="notice__btn"
+                 @click="noticeClosed" />
           </div>
         </template>
         <template v-else>
           <div class="notice">
             <nuxt-img class="notice__img" src="/popup-rules.png" />
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
+            <Btn w="37%"
+                 h="10%"
+                 max-w="160px"
+                 max-h="50px"
+                 bg="6"
+                 br="35"
+                 class="notice__btn"
+                 @click="noticeClosed" />
           </div>
         </template>
       </template>
@@ -746,7 +758,7 @@
       <template v-else-if="curGame === 6 && gameStep === 4">
         <div class="notice">
           <nuxt-img class="notice__img" src="/popup-treasure.png" />
-          <div class="notice__text">
+          <div class="notice__treasure_text">
             <!--
             -->{{
               'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
@@ -1174,9 +1186,10 @@ a {
 .notice {
   position: relative;
 
-  &__text {
+  &__text
+  {
     position: absolute;
-    bottom: 42%;
+    top: 39%;
     max-width: 50%;
     left: 50%;
     transform: translateX(-50%);
@@ -1188,6 +1201,19 @@ a {
     max-height: 180px;
   }
 
+  &__treasure_text {
+    position: absolute;
+    top: 42%;
+    max-width: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    font-weight: 500;
+    white-space: pre-wrap;
+    max-height: 180px;
+  }
   &__img {
     max-height: 100vh;
     max-width: 100%;
@@ -1195,7 +1221,7 @@ a {
 
   &__btn {
     position: absolute;
-    bottom: 32%;
+    bottom: 21%;
     left: 50%;
 
     transform: translateX(-50%);
