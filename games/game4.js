@@ -106,7 +106,7 @@ const createGame = (config = {}) => {
     'pic_take',
     'robovoice_1',
     'robovoice_2',
-    'robovoice_3', , 'button_common_target', 'button_add', 'button_add_target'
+    'robovoice_3'
   ]
   var musics = {}
 
@@ -275,8 +275,12 @@ const createGame = (config = {}) => {
     button.on('pointerdown', function (pointer, localX, localY, event) {
       this.setTexture('play_pressed')
       var music = that.sound.add('all')
-      music.on('complete', endGame)
+      // music.on('complete', endGame)
       music.play()
+
+      that.time.delayedCall(6000, () => {
+        endGame();
+      });
     })
 
     button.on('pointerup', function (pointer, localX, localY, event) {
@@ -305,16 +309,25 @@ const createGame = (config = {}) => {
     var lastLevel = curLevel.toString()
     ++curLevel
     if ('level' + curLevel.toString() in levels) {
-      musics['robovoice_' + lastLevel].on('complete', () => {
+      /* musics['robovoice_' + lastLevel].on('complete', () => {
         resetLevel()
         startLevel()
-      })
+      })*/
       musics['robovoice_' + lastLevel].play()
+
+      that.time.delayedCall(3000, () => {
+        resetLevel();
+        startLevel();
+      });
     } else {
-      musics['robovoice_' + lastLevel].on('complete', () => {
+      /* musics['robovoice_' + lastLevel].on('complete', () => {
         final()
-      })
+      }) */
       musics['robovoice_' + lastLevel].play()
+
+      that.time.delayedCall(3000, () => {
+        final()
+      });
     }
   }
 
