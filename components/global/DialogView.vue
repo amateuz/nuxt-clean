@@ -94,7 +94,7 @@ export default {
       default: 'left-bottom',
     },
     visibilityTimeout: {
-      type: Number,
+      type: [Number, Array],
       default: 0,
     },
     hidingTimeout: {
@@ -105,26 +105,80 @@ export default {
       type: Number,
       default: 300,
     },
+    auto: {
+      type: Boolean,
+      default: false,
+    },
+    dialogTimeout: {
+      type: [Number, Array],
+      default: 3000,
+    },
+    infinite: {
+      type: Boolean,
+      default: false,
+    },
+    dontHideLast: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       isDisabled: false,
+      dialogNumberTimeouted: this.dialogNum,
       dialogNumber: this.dialogNum,
       dialogText: this.dialogs[0].text,
       isVisible: this.visible,
+      dialogTimeoutData: this.dialogTimeout,
+      interval: null,
     }
   },
   created() {
+    // console.log(`created ${this.id}`)
+    // console.log(`dtd: ${this.dialogTimeoutData}`)
+    // console.log(`isArray: ${Array.isArray(this.dialogTimeoutData)}`)
+
     if (this.visibilityTimeout > 0) {
       this.isDisabled = true
       setTimeout(() => {
         this.isDisabled = false
       }, this.visibilityTimeout)
     }
-    if (this.hidingTimeout > 0) {
+
+    const wasNumber = typeof this.dialogTimeoutData === 'number'
+    if (wasNumber) {
+      this.dialogTimeoutData = []
+      for (let i = 0; i < this.dialogs.length; i++) {
+        this.dialogTimeoutData.push(this.dialogTimeout)
+      }
+    }
+
+    if (this.dialogs.length > 1 && this.auto) {
+      const times = this.dialogs.length - 1
+      let timesDone = 1
+      const isInfinite = this.infinite
+      const callback = function (curDialogNum) {
+        const dn = curDialogNum
+        setTimeout(() => {
+          if (timesDone < times) callback.bind(this).call(dn)
+          if (!isInfinite) timesDone++
+          this.dialogNumber++
+        }, this.getDialogTimeout(dn))
+      }
+
+      setTimeout(
+        callback.bind(this),
+        this.getDialogTimeout(this.dialogNumber) + this.visibilityTimeout
+      )
+
+      /* setTimeout(() => {
+        this.emitDialogEnd()
+      }, this.getDialogEndTimeout) */
+    } else if (this.hidingTimeout > 0) {
       setTimeout(() => {
         this.isDisabled = true
         setTimeout(() => {
+          // console.log('before emit 1')
           this.emitDialogEnd()
         }, this.bubbleDuration)
       }, this.hidingTimeout)
@@ -137,6 +191,12 @@ export default {
       if (this.dialogNumber + 1 >= this.dialogs.length)
         return this.dialogNumber % this.dialogs.length
       return this.dialogNumber
+    },
+    getDialogNumTimeouted() {
+      if (this.dialogNumberTimeouted < 0) return 0
+      if (this.dialogNumberTimeouted + 1 >= this.dialogs.length)
+        return this.dialogNumberTimeouted % this.dialogs.length
+      return this.dialogNumberTimeouted
     },
     getStyle() {
       let sStyle = ''
@@ -154,10 +214,10 @@ export default {
       return this.dialogs[this.getDialogNum].text
     },
     hasButton() {
-      return this.dialogs[this.getDialogNum].button !== undefined
+      return this.dialogs[this.getDialogNumTimeouted].button !== undefined
     },
     hasPlayButton() {
-      return this.dialogs[this.getDialogNum].playButton !== undefined
+      return this.dialogs[this.getDialogNumTimeouted].playButton !== undefined
     },
     getButtonText() {
       return this.dialogs[this.getDialogNum].button?.text
@@ -170,33 +230,85 @@ export default {
     getClickEnabled() {
       return !(this.to && this.to !== 'modal')
     },
+    getDialogEndTimeout() {
+      const isArray = Array.isArray(this.dialogTimeoutData)
+      let result = 0
+      if (isArray) {
+        result +=
+          this.dialogTimeoutData.reduce((acc, item) => acc + item) +
+          this.bubbleDuration * (this.dialogs.length - 1) * 2
+      } else {
+        result += this.hidingTimeout + this.bubbleDuration
+      }
+
+      return result
+    },
   },
   watch: {
     dialogNum() {
+      this.dialogNumber = this.dialogNum
       setTimeout(
         () => {
-          this.dialogNumber = this.dialogNum
-          this.dialogText = this.getText
-          this.isVisible = true
+          this.dialogNumberTimeouted = this.dialogNum
         },
         this.isVisible ? this.bubbleDuration : 0
       )
+    },
+    dialogNumber() {
+      // console.log(`dialog id:${this.id}\n, dialog num: ${this.dialogNumber}\n`)
+      // console.log(this.dialogs)
+      setTimeout(
+        () => {
+          this.dialogText = this.getText
+          this.isVisible = true
+          this.dialogNumberTimeouted = this.dialogNumber
+          /* console.log(
+            `id ${this.id}, num ${
+              this.dialogNumber
+            }, timeout ${this.getDialogTimeout(this.dialogNumber)}`
+          ) */
+          if (this.dialogNumber === this.dialogs.length - 1 && this.auto) {
+            setTimeout(() => {
+              if (!this.dontHideLast) this.isVisible = false
+              // console.log('before emit 2')
+              this.emitDialogEnd()
+            }, this.getDialogTimeout(this.dialogNumber))
+          }
+        },
+        this.isVisible ? this.bubbleDuration : 0
+      )
+
       this.isVisible = false
     },
   },
   methods: {
-    emitClick() {
-      this.$emit('click')
-    },
-    emitDialogEnd() {
-      this.$emit('end')
-    },
     closeDialog(event) {
       if (!this.id) return
       if (!event.target.classList.contains(`top-${this.id}`)) {
         this.isVisible = false
       }
     },
+    emitClick() {
+      this.$emit('click')
+    },
+    emitDialogEnd() {
+      // console.log(`end dialog ${this.id}`)
+      this.$emit('end')
+    },
+    getDialogTimeout(dialogNum = 0) {
+      // console.log(`id ${this.id}, dn ${dialogNum}`)
+      // console.log(this.dialogTimeoutData)
+      if (Array.isArray(this.dialogTimeoutData)) {
+        if (this.dialogTimeoutData.length > dialogNum)
+          return this.dialogTimeoutData[dialogNum]
+        return this.dialogTimeoutData[0]
+      }
+
+      return this.dialogTimeoutData
+    },
+  },
+  beforeDestroy() {
+    if (this.interval) clearInterval(this.interval)
   },
 }
 </script>
@@ -221,7 +333,7 @@ export default {
   transform: scale(1);
   transform-origin: right bottom;
 
-  z-index: 2;
+  z-index: 50;
 
   &_absolute {
     position: absolute;

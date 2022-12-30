@@ -1,16 +1,843 @@
 <template>
-  <section class="house-page" :class="{ zoomed: zoomed }">
-    <!--    <button @click="zoomed = true">Zoom</button>-->
-    <!--    <button @click="zoomed = false">Unzoom</button>-->
-    <!--    <button @click="curGame++">Next</button>-->
-    <!--    <button @click="curGame&#45;&#45;">Prev</button>-->
-    <!--    <div>{{ curGame }}</div>-->
-    <!--    <div class="debug">-->
-    <!--      curgame-->
-    <!--      {{ curGame }}-->
-    <!--      gamestep-->
-    <!--      {{ gameStep }}-->
-    <!--    </div>-->
+  <div>
+    <section class="house-page" :class="{ zoomed: zoomed }">
+      <!--      <button @click="curGame++">Next</button>-->
+      <!--      <button @click="curGame&#45;&#45;">Prev</button>-->
+      <!--      <div>{{ curGame }}</div>-->
+      <!--      <div class="debug">-->
+      <!--        curgame-->
+      <!--        {{ curGame }}-->
+      <!--        gamestep-->
+      <!--        {{ gameStep }}-->
+      <!--      </div>-->
+      <div
+        class="house-page__container"
+        :class="{ [`house-page__container_blur-content`]: showModal }"
+      >
+        <div class="house-page__content-container container">
+          <div class="house-page__house sber-house">
+            <nuxt-img
+              preload
+              placeholder
+              class="sber-house__img"
+              src="/house2.png"
+              alt="sber house image"
+              @load="onImgLoad"
+            />
+            <template v-for="floorNum in floorCount">
+              <div
+                :key="floorNum"
+                :ref="`floor${floorCount - floorNum + 1}`"
+                :class="[
+                  `sber-house__floor floor floor_${floorCount - floorNum + 1}`,
+                  {
+                    [`floor_disabled`]: curGame < floorCount - floorNum + 1,
+                  },
+                ]"
+              >
+                <div class="floor__content">
+                  <nuxt-img
+                    preload
+                    placeholder
+                    class="floor__img"
+                    :src="getFloorSrc(floorCount - floorNum + 1)"
+                    :alt="`floor ${floorCount - floorNum + 1} img`"
+                    @load="onImgLoad"
+                  />
+                  <template v-if="floorNum === 1">
+                    <div
+                      v-if="(curGame === 6 && gameStep < 2) || curGame < 6"
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="40%"
+                        :key="602"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 6 && gameStep >= 2"
+                      :class="`floor__top top top_all`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="18%"
+                        :key="601"
+                        :dialogs="dialogs[13].content"
+                        :dialog-num="dialogs[13].timesClicked"
+                        :visible="true"
+                        :visibility-timeout="500"
+                        :auto="true"
+                        dialog-origin="center-bottom"
+                        @play="playSound"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/topall.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 2">
+                    <div
+                      v-if="(curGame === 5 && gameStep === 1) || curGame < 5"
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="55%"
+                        :key="504"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 5 && gameStep === 2"
+                      :class="`floor__top top top_124 no-interaction`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="95%"
+                        right="60%"
+                        :key="503"
+                        :dialogs="dialogs[17].content"
+                        :dialog-num="dialogs[17].timesClicked"
+                        :visible="true"
+                        :visibility-timeout="500"
+                        :hiding-timeout="5000"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top124.png`"
+                        :alt="`top 1 top 2 and top 4 image`"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 5 && gameStep === 2"
+                      :class="`floor__top top top_3_state_3 no-interaction`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="70%"
+                        right="-100%"
+                        :key="502"
+                        :dialogs="dialogs[19].content"
+                        :dialog-num="dialogs[19].timesClicked"
+                        :visibility-timeout="9700"
+                        :hiding-timeout="15000"
+                        :visible="true"
+                        @end="
+                          curGame = 6
+                          gameStep = 1
+                        "
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top3state3.png`"
+                        :alt="`top 3 image`"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 5 && gameStep === 2"
+                      :class="`floor__top top top_5_christmas`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="55%"
+                        :key="501"
+                        :dialogs="dialogs[18].content"
+                        :dialog-num="dialogs[18].timesClicked"
+                        dialog-origin="right-bottom"
+                        :visibility-timeout="4700"
+                        :hiding-timeout="10000"
+                        :visible="true"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        class="top__img"
+                        :src="`/tops/top5christmas.png`"
+                        :alt="`top 5 image`"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 3">
+                    <div
+                      v-if="(curGame === 4 && gameStep === 1) || curGame < 4"
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="40%"
+                        :key="404"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 4 && gameStep === 2"
+                      :class="`floor__top top top_${
+                        floorCount - floorNum + 1
+                      } no-interaction`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="40%"
+                        :key="403"
+                        :dialogs="dialogs[14].content"
+                        :dialog-num="dialogs[14].timesClicked"
+                        dialog-origin="right-bottom"
+                        :visible="true"
+                        :visibility-timeout="500"
+                        :hiding-timeout="5000"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top4christmas.png`"
+                        :alt="`top 4 image`"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 4 && gameStep === 2"
+                      :class="`floor__top top top_123 no-interaction`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        class="dialog__floor4_1"
+                        bottom="102%"
+                        right="18%"
+                        :key="402"
+                        :dialogs="dialogs[15].content"
+                        :dialog-num="dialogs[15].timesClicked"
+                        dialog-origin="right-bottom"
+                        :visible="true"
+                        :visibility-timeout="4700"
+                        :hiding-timeout="10000"
+                      />
+                      <DialogView
+                        :id="floorNum"
+                        class="dialog__floor4_2"
+                        bottom="102%"
+                        right="35%"
+                        :key="401"
+                        :dialogs="dialogs[16].content"
+                        :dialog-num="dialogs[16].timesClicked"
+                        :visible="true"
+                        :visibility-timeout="9700"
+                        :hiding-timeout="15000"
+                        @end="
+                          curGame = 5
+                          gameStep = 1
+                        "
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top123.png`"
+                        :alt="`top 1 top 2 and top 3 image`"
+                        @load="onImgLoad"
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 4">
+                    <div
+                      v-if="(curGame === 3 && gameStep === 1) || curGame < 3"
+                      :class="`floor__top top top_${floorCount - floorNum + 1}`"
+                    >
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="30%"
+                        :key="304"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="
+                          curGame === 3 && runDialog($event, floorNum - 1)
+                        "
+                        @load="onImgLoad"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 3 && gameStep === 2"
+                      :class="`floor__top top top_3_state_2 no-interaction`"
+                      style="z-index: 10"
+                    >
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top3state2.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @load="onImgLoad"
+                      />
+                      <DialogView
+                        :id="floorNum"
+                        bottom="100%"
+                        right="0"
+                        :key="301"
+                        :dialogs="dialogs[10].content"
+                        dialog-origin="center-bottom"
+                        :visibility-timeout="500"
+                        :hiding-timeout="5000"
+                        :visible="true"
+                        :auto="true"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 3 && gameStep === 2"
+                      :class="`floor__top top top_2_state_2 no-interaction`"
+                    >
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top2state2.png`"
+                        :alt="`top 2 image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="50%"
+                        :key="302"
+                        :dialogs="dialogs[11].content"
+                        dialog-origin="right-bottom"
+                        :visibility-timeout="3500"
+                        :hiding-timeout="9600"
+                        :visible="true"
+                        :auto="true"
+                      />
+                    </div>
+                    <div
+                      v-if="curGame === 3 && gameStep === 2"
+                      :class="`floor__top top top_1_state_2 no-interaction`"
+                    >
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="`/tops/top1christmas.png`"
+                        :alt="`top 1 image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                      <DialogView
+                        :id="floorNum"
+                        bottom="102%"
+                        right="-190%"
+                        :key="303"
+                        :dialogs="dialogs[12].content"
+                        dialog-origin="left-bottom"
+                        :visibility-timeout="7500"
+                        :hiding-timeout="13000"
+                        :visible="true"
+                        :auto="true"
+                        @end="
+                          gameStep = 0
+                          curGame = 4
+                          showModal = true
+                        "
+                      />
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 5">
+                    <div
+                      v-if="curGame <= 2 || (curGame === 3 && gameStep < 2)"
+                      :class="[
+                        {
+                          [`floor__top top top_${
+                            floorCount - floorNum + 1
+                          }`]: true,
+                        },
+                        { 'no-interaction': curGame === 3 && gameStep < 2 },
+                      ]"
+                    >
+                      <nuxt-img
+                        :src="`/tops/top${floorCount - floorNum + 1}.png`"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                      <DialogView
+                        v-if="curGame === 2 && gameStep < 2"
+                        :id="floorNum"
+                        :key="202"
+                        bottom="102%"
+                        right="60%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <DialogView
+                        v-else-if="
+                          (curGame === 2 && gameStep === 2) ||
+                          (curGame === 3 && gameStep < 2)
+                        "
+                        :id="9"
+                        :key="201"
+                        bottom="102%"
+                        left="100%"
+                        :dialogs="dialogs[8].content"
+                        :visible="true"
+                        :visibility-timeout="500"
+                        :dialog-timeout="[4500, 6500]"
+                        :auto="true"
+                      />
+                    </div>
+                    <div
+                      v-if="
+                        (gameStep >= 2 && curGame === 2) ||
+                        (curGame === 3 && gameStep < 2)
+                      "
+                      class="top top_1_christmas_floor2 no-iteraction"
+                    >
+                      <nuxt-img
+                        src="/tops/top1christmas.png"
+                        alt="top 1 christmas image"
+                      />
+                      <div class="top_1_christmas_floor2__dialog">
+                        <DialogView
+                          v-if="curGame === 2 && gameStep === 2"
+                          :id="10"
+                          :key="203"
+                          :dialogs="dialogs[9].content"
+                          :visible="true"
+                          :visibility-timeout="4200"
+                          :dialog-timeout="[4000, 4500]"
+                          :auto="true"
+                          @end="
+                            gameStep = 0
+                            curGame = 3
+                            showModal = true
+                          "
+                        />
+                      </div>
+                    </div>
+                  </template>
+                  <template v-if="floorNum === 6">
+                    <div
+                      v-if="curGame === 1 || (curGame === 2 && gameStep < 2)"
+                      class="floor__top top"
+                      :class="[
+                        {
+                          [`top_${floorCount - floorNum + 1}`]:
+                            gameStep < 2 && curGame === 1,
+                        },
+                        {
+                          [`top_${
+                            floorCount - floorNum + 1
+                          }_christmas no-iteraction`]:
+                            (gameStep >= 2 && curGame === 1) ||
+                            (curGame === 2 && gameStep < 2),
+                        },
+                      ]"
+                    >
+                      <nuxt-img
+                        preload
+                        placeholder
+                        :src="getTopSrc(1)"
+                        :alt="`top ${floorCount - floorNum + 1} image`"
+                        @click.prevent="runDialog($event, floorNum - 1)"
+                        @load="onImgLoad"
+                      />
+                      <DialogView
+                        v-if="curGame === 1 && gameStep === 1"
+                        :id="floorNum"
+                        :key="101"
+                        :disabled="showModal"
+                        bottom="102%"
+                        right="40%"
+                        :dialogs="dialogs[floorNum - 1].content"
+                        :dialog-num="dialogs[floorNum - 1].timesClicked"
+                        dialog-origin="right-bottom"
+                        @click="dialogBtnClicked($event, floorNum - 1)"
+                      />
+                      <DialogView
+                        v-if="
+                          (curGame === 1 && gameStep === 4) ||
+                          (curGame === 2 && gameStep < 2)
+                        "
+                        :id="8"
+                        :key="102"
+                        class="top__dialog_top6_christmas"
+                        :dialogs="dialogs[7].content"
+                        :dialog-num="0"
+                        dialog-origin="right-bottom"
+                        :visible="true"
+                        :visibility-timeout="500"
+                        :auto="true"
+                        @end="
+                          gameStep = 1
+                          curGame = 2
+                          showModal = false
+                        "
+                      />
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      <vue-final-modal
+        v-model="showModal"
+        classes="modal-container"
+        content-class="modal-content"
+        @closed="
+          closeModal()
+          isModalPopupRules = false
+        "
+      >
+        <template v-if="isModalPopupRules">
+          <template v-if="curGame === 6 && gameStep >= 4">
+            <div class="notice">
+              <nuxt-img class="notice__img" src="/popup-treasure.png" />
+              <div class="notice__treasure_text">
+                <!--
+          -->{{
+                  'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
+                }}
+              </div>
+              <Btn
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                bg="10"
+                br="35"
+                class="notice__btn"
+                @click="goToTelegram"
+              />
+            </div>
+          </template>
+          <template v-else-if="curGame >= 4">
+            <div class="notice">
+              <nuxt-img class="notice__img" src="/popup-magic.png" />
+              <div class="notice__text">
+                <!--
+                -->{{
+                  getMagicWord(1) +
+                  ' ' +
+                  getMagicWord(2) +
+                  ' ' +
+                  getMagicWord(3) +
+                  '\n\n' +
+                  'Отправь полученное заклинание аудиосообщением'
+                }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
+                  >в телеграм-канал,</a
+                >{{ 'чтобы прогнать Крампуса\nи заработать памятные призы.' }}
+              </div>
+              <Btn
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                bg="6"
+                br="35"
+                class="notice__btn"
+                @click="noticeClosed"
+              />
+            </div>
+          </template>
+          <template v-else-if="curGame >= 3">
+            <div class="notice">
+              <nuxt-img class="notice__img" src="/popup-magic.png" />
+              <div class="notice__text">
+                <!--
+                -->{{
+                  (
+                    getMagicWord(2) +
+                    '\n\n' +
+                    'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                  ).trim()
+                }}
+              </div>
+              <Btn
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                bg="6"
+                br="35"
+                class="notice__btn"
+                @click="noticeClosed"
+              />
+            </div>
+          </template>
+          <template v-else-if="curGame >= 2">
+            <div class="notice">
+              <nuxt-img class="notice__img" src="/popup-magic.png" />
+              <div class="notice__text">
+                <!--
+          -->
+                {{
+                  (
+                    getMagicWord(1) +
+                    '\n\n' +
+                    'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                  ).trim()
+                }}
+              </div>
+              <Btn
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                bg="6"
+                br="35"
+                class="notice__btn"
+                @click="noticeClosed"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <div class="notice">
+              <nuxt-img class="notice__img" src="/popup-rules.png" />
+              <Btn
+                w="37%"
+                h="10%"
+                max-w="160px"
+                max-h="50px"
+                bg="6"
+                br="35"
+                class="notice__btn"
+                @click="noticeClosed"
+              />
+            </div>
+          </template>
+        </template>
+        <template v-else-if="curGame === 1 && gameStep < 3">
+          <div class="game1">
+            <div class="game1__container">
+              <template v-if="gameStep === 0">
+                <Btn
+                  class="game1__close-btn"
+                  w="40px"
+                  h="40px"
+                  max-w="40px"
+                  max-h="40px"
+                  @click.native="closeModal"
+                />
+                <nuxt-img class="game1__img" src="/game1/game1-start.png" />
+                <Btn
+                  class="game1__btn"
+                  bg="3"
+                  w="37%"
+                  h="10%"
+                  max-w="160px"
+                  max-h="50px"
+                  br="35"
+                  @click="startGame"
+                />
+              </template>
+              <template v-else-if="gameStep === 1">
+                <template v-for="i in 5">
+                  <nuxt-img
+                    v-if="!imgClicked[i - 1]"
+                    :key="i"
+                    preload
+                    :class="[`game1__item game1__item_${i}`]"
+                    :src="`/game1/items/item${i}out.png`"
+                    @click.native="onImgClicked($event, i - 1)"
+                  />
+                  <nuxt-img
+                    v-else
+                    :key="i + 10"
+                    preload
+                    :class="[
+                      `game1__item game1__item_${i}`,
+                      { 'no-interaction': i === 1 },
+                    ]"
+                    :src="`/game1/items/item${i}.png`"
+                    @click.native="onImgClicked($event, i - 1)"
+                  />
+                  <nuxt-img
+                    :key="i + 20"
+                    preload
+                    :src="`game1/tracker${i - 1}.png`"
+                    class="game1__tracker game-tracker"
+                    :class="{
+                      'game-tracker_visible':
+                        imgClicked.filter((x) => x).length === i - 1,
+                    }"
+                  />
+                </template>
+                <nuxt-img
+                  preload
+                  class="game1__tracker game-tracker"
+                  :class="{
+                    'game-tracker_visible': imgClicked.every((x) => x),
+                  }"
+                  src="/game1/tracker5.png"
+                />
+                <nuxt-img class="game1__floor" src="/floors/floor1.png" />
+              </template>
+              <template v-else-if="gameStep === 2">
+                <nuxt-img class="game1__img" src="/game1/game1-finish.png" />
+                <Btn
+                  class="game1__btn"
+                  bg="4"
+                  w="37%"
+                  h="10%"
+                  max-w="160px"
+                  max-h="50px"
+                  br="35"
+                  @click="moveGame"
+                />
+              </template>
+            </div>
+          </div>
+        </template>
+        <template v-else-if="curGame === 6 && gameStep === 4">
+          <div class="notice">
+            <nuxt-img class="notice__img" src="/popup-treasure.png" />
+            <div class="notice__treasure_text">
+              <!--
+              -->{{
+                'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
+              }}
+            </div>
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="10"
+              br="35"
+              class="notice__btn"
+              @click="goToTelegram"
+            />
+          </div>
+        </template>
+        <template
+          v-else-if="gameStep === 0 || (curGame === 1 && gameStep === 3)"
+        >
+          <div class="notice">
+            <nuxt-img class="notice__img" src="/popup-magic.png" />
+            <div class="notice__text">
+              <template v-if="curGame === 1">
+                <!--
+                -->{{
+                  (
+                    getMagicWord(1) +
+                    '\n\n' +
+                    'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                  ).trim()
+                }}
+              </template>
+              <template v-else-if="curGame === 3"
+                ><!--
+              -->{{
+                  (
+                    getMagicWord(1) +
+                    ' ' +
+                    getMagicWord(2) +
+                    '\n\n' +
+                    'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
+                  ).trim()
+                }}
+              </template>
+              <template v-else-if="curGame === 4">
+                <!--
+                -->{{
+                  getMagicWord(1) +
+                  ' ' +
+                  getMagicWord(2) +
+                  ' ' +
+                  getMagicWord(3) +
+                  '\n\n' +
+                  'Отправь полученное заклинание аудиосообщением'
+                }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
+                  >в телеграм-канал,</a
+                >{{ 'чтобы прогнать Крампуса\nи заработать памятные призы.' }}
+              </template>
+            </div>
+            <Btn
+              w="37%"
+              h="10%"
+              max-w="160px"
+              max-h="50px"
+              bg="6"
+              br="35"
+              class="notice__btn"
+              @click="magicClosed"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <PhaserGame v-if="createGame" :create-game="createGame" />
+        </template>
+      </vue-final-modal>
+      <button
+        class="house-page__notice-btn"
+        :class="{ swing: noticeAnimated }"
+        @click="
+          noticeAnimated = false
+          isModalPopupRules = true
+          showModal = true
+        "
+      />
+    </section>
     <section class="preload">
       <nuxt-img :src="`/bgs/house-bg2.png`" />
       <nuxt-img :src="`/bgs/btn-bg.png`" />
@@ -40,9 +867,6 @@
       <template v-for="i in 5">
         <nuxt-img :key="i + 80" :src="`/tops/top${i}christmas.png`" />
       </template>
-      <template v-for="i in 6">
-        <nuxt-img :key="i + 60" :src="`/comics/frame${i}.svg`" />
-      </template>
       <nuxt-img :src="`/house2.png`" />
       <nuxt-img :src="`/popup-rules.png`" />
       <nuxt-img :src="`/popup-magic.png`" />
@@ -55,805 +879,8 @@
       <nuxt-img :src="`/tops/top124.png`" />
       <nuxt-img :src="`/tops/topall.png`" />
       <audio src="/sounds/button_common.mp3" />
-      <audio src="/sounds/pageTurn.mp3" />
     </section>
-    <div
-      class="house-page__container"
-      :class="{ [`house-page__container_blur-content`]: showModal }"
-    >
-      <div class="house-page__content-container container">
-        <div class="house-page__house sber-house">
-          <nuxt-img
-            preload
-            placeholder
-            class="sber-house__img"
-            src="/house2.png"
-            alt="sber house image"
-            @load="onImgLoad"
-          />
-          <template v-for="floorNum in floorCount">
-            <div
-              :key="floorNum"
-              :ref="`floor${floorCount - floorNum + 1}`"
-              :class="[
-                `sber-house__floor floor floor_${floorCount - floorNum + 1}`,
-                {
-                  [`floor_disabled`]: curGame < floorCount - floorNum + 1,
-                },
-              ]"
-            >
-              <div class="floor__content">
-                <nuxt-img
-                  preload
-                  placeholder
-                  class="floor__img"
-                  :src="getFloorSrc(floorCount - floorNum + 1)"
-                  :alt="`floor ${floorCount - floorNum + 1} img`"
-                  @load="onImgLoad"
-                />
-                <template v-if="floorNum === 1">
-                  <div
-                    v-if="(curGame === 6 && gameStep < 2) || curGame < 6"
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      class="top__img"
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 6 && gameStep >= 2"
-                    :class="`floor__top top top_all`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="18%"
-                      :dialogs="dialogs[13].content"
-                      :dialog-num="dialogs[13].timesClicked"
-                      :visible="true"
-                      :visibility-timeout="1500"
-                      dialog-origin="center-bottom"
-                      @play="playSound"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      class="top__img"
-                      :src="`/tops/topall.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 2">
-                  <div
-                    v-if="(curGame === 5 && gameStep === 1) || curGame < 5"
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="55%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      class="top__img"
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 5 && gameStep === 2"
-                    :class="`floor__top top top_124`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="55%"
-                      :dialogs="dialogs[17].content"
-                      :dialog-num="dialogs[17].timesClicked"
-                      :visible="true"
-                      :visibility-timeout="1500"
-                      :hiding-timeout="4000"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      class="top__img"
-                      :src="`/tops/top124.png`"
-                      :alt="`top 1 top 2 and top 4 image`"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 5 && gameStep === 2"
-                    :class="`floor__top top top_3_state_3`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="70%"
-                      right="-100%"
-                      :dialogs="dialogs[19].content"
-                      :dialog-num="dialogs[19].timesClicked"
-                      :visibility-timeout="7500"
-                      :hiding-timeout="10000"
-                      :visible="true"
-                      @end="
-                        curGame = 6
-                        gameStep = 1
-                      "
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      class="top__img"
-                      :src="`/tops/top3state3.png`"
-                      :alt="`top 3 image`"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 5 && gameStep === 2"
-                    :class="`floor__top top top_5_christmas`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="55%"
-                      :dialogs="dialogs[18].content"
-                      :dialog-num="dialogs[18].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visibility-timeout="4500"
-                      :hiding-timeout="7000"
-                      :visible="true"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      class="top__img"
-                      :src="`/tops/top5christmas.png`"
-                      :alt="`top 5 image`"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 3">
-                  <div
-                    v-if="(curGame === 4 && gameStep === 1) || curGame < 4"
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 4 && gameStep === 2"
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[14].content"
-                      :dialog-num="dialogs[14].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visible="true"
-                      :visibility-timeout="1500"
-                      :hiding-timeout="3500"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top4christmas.png`"
-                      :alt="`top 4 image`"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 4 && gameStep === 2"
-                    :class="`floor__top top top_123`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      class="dialog__floor4_1"
-                      bottom="102%"
-                      right="18%"
-                      :dialogs="dialogs[15].content"
-                      :dialog-num="dialogs[15].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visible="true"
-                      :visibility-timeout="4000"
-                      :hiding-timeout="6000"
-                    />
-                    <DialogView
-                      :id="floorNum"
-                      class="dialog__floor4_2"
-                      bottom="102%"
-                      right="35%"
-                      :dialogs="dialogs[16].content"
-                      :dialog-num="dialogs[16].timesClicked"
-                      :visible="true"
-                      :visibility-timeout="6500"
-                      :hiding-timeout="10500"
-                      @end="
-                        curGame = 5
-                        gameStep = 1
-                      "
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top123.png`"
-                      :alt="`top 1 top 2 and top 3 image`"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 4">
-                  <div
-                    v-if="(curGame === 3 && gameStep === 1) || curGame < 3"
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="30%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 3 && gameStep === 2"
-                    :class="`floor__top top top_3_state_2`"
-                  >
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top3state2.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="30%"
-                      :dialogs="dialogs[10].content"
-                      :dialog-num="dialogs[10].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visibility-timeout="500"
-                      :hiding-timeout="3000"
-                      :visible="true"
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 3 && gameStep === 2"
-                    :class="`floor__top top top_2_state_2`"
-                  >
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top2state2.png`"
-                      :alt="`top 2 image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="30%"
-                      :dialogs="dialogs[11].content"
-                      :dialog-num="dialogs[11].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visibility-timeout="3500"
-                      :hiding-timeout="7000"
-                      :visible="true"
-                      @end="
-                        curGame++
-                        gameStep = 0
-                        showModal = true
-                      "
-                    />
-                  </div>
-                  <div
-                    v-if="curGame === 3 && gameStep === 2"
-                    :class="`floor__top top top_1_state_2`"
-                  >
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="`/tops/top1christmas.png`"
-                      :alt="`top 1 image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                    <DialogView
-                      :id="floorNum"
-                      bottom="102%"
-                      right="30%"
-                      :dialogs="dialogs[12].content"
-                      :dialog-num="dialogs[12].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visibility-timeout="10500"
-                      :hiding-timeout="14000"
-                      :visible="true"
-                      @end="
-                        gameStep = 0
-                        curGame = 4
-                        showModal = true
-                      "
-                    />
-                  </div>
-                </template>
-                <template v-if="floorNum === 5">
-                  <div
-                    v-if="curGame <= 2"
-                    :class="`floor__top top top_${floorCount - floorNum + 1}`"
-                  >
-                    <nuxt-img
-                      :src="`/tops/top${floorCount - floorNum + 1}.png`"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                    <DialogView
-                      v-if="curGame === 2 && gameStep < 2"
-                      :id="floorNum"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <DialogView
-                      v-else-if="curGame === 2 && gameStep === 2"
-                      :id="9"
-                      bottom="102%"
-                      right="-180%"
-                      :dialogs="dialogs[8].content"
-                      :dialog-num="dialogs[8].timesClicked"
-                      :visible="true"
-                      :visibility-timeout="500"
-                      :hiding-timeout="1100"
-                    />
-                  </div>
-                  <div
-                    v-if="gameStep >= 2 && curGame === 2"
-                    class="top top_1_christmas_floor2 no-iteraction"
-                  >
-                    <nuxt-img
-                      src="/tops/top1christmas.png"
-                      alt="top 1 christmas image"
-                    />
-                    <div class="top_1_christmas_floor2__dialog">
-                      <DialogView
-                        v-if="curGame === 2 && gameStep === 2"
-                        :id="10"
-                        :dialogs="dialogs[9].content"
-                        :dialog-num="dialogs[9].timesClicked"
-                        :visible="true"
-                        :visibility-timeout="1600"
-                        :hiding-timeout="2700"
-                        @end="
-                          gameStep = 0
-                          curGame = 3
-                          showModal = true
-                        "
-                      />
-                    </div>
-                  </div>
-                </template>
-                <template v-if="floorNum === 6">
-                  <div
-                    v-if="curGame === 1"
-                    class="floor__top top"
-                    :class="[
-                      {
-                        [`top_${floorCount - floorNum + 1}`]:
-                          gameStep < 2 && curGame === 1,
-                      },
-                      {
-                        [`top_${
-                          floorCount - floorNum + 1
-                        }_christmas no-iteraction`]:
-                          gameStep >= 2 && curGame === 1,
-                      },
-                    ]"
-                  >
-                    <nuxt-img
-                      preload
-                      placeholder
-                      :src="getTopSrc(1)"
-                      :alt="`top ${floorCount - floorNum + 1} image`"
-                      @click.prevent="runDialog($event, floorNum - 1)"
-                      @load="onImgLoad"
-                    />
-                    <DialogView
-                      :id="floorNum"
-                      :disabled="showModal"
-                      bottom="102%"
-                      right="40%"
-                      :dialogs="dialogs[floorNum - 1].content"
-                      :dialog-num="dialogs[floorNum - 1].timesClicked"
-                      dialog-origin="right-bottom"
-                      @click="dialogBtnClicked($event, floorNum - 1)"
-                    />
-                    <!--                    <DialogView-->
-                    <!--                      :id="7"-->
-                    <!--                      v-if="gameStep === 3"-->
-                    <!--                      class="top__dialog_clock"-->
-                    <!--                      :dialogs="dialogs[6].content"-->
-                    <!--                      :dialog-num="dialogs[6].timesClicked"-->
-                    <!--                      :visible="true"-->
-                    <!--                      :visibility-timeout="500"-->
-                    <!--                      :hiding-timeout="1100"-->
-                    <!--                    />-->
-                    <DialogView
-                      v-if="gameStep === 3"
-                      :id="8"
-                      class="top__dialog_top6_christmas"
-                      :dialogs="dialogs[7].content"
-                      :dialog-num="dialogs[7].timesClicked"
-                      dialog-origin="right-bottom"
-                      :visible="true"
-                      :visibility-timeout="500"
-                      :hiding-timeout="3500"
-                      @end="
-                        gameStep = 0
-                        curGame = 2
-                        showModal = true
-                      "
-                    />
-                  </div>
-                </template>
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
-    </div>
-    <vue-final-modal
-      v-model="showModal"
-      classes="modal-container"
-      content-class="modal-content"
-      @closed="
-        closeModal()
-        isModalPopupRules = false
-      "
-    >
-      <template v-if="isModalPopupRules">
-        <template v-if="curGame === 6 && gameStep >= 4">
-          <div class="notice">
-            <nuxt-img class="notice__img" src="/popup-treasure.png" />
-            <div class="notice__treasure_text">
-              <!--
-        -->{{
-                'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
-              }}
-            </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="10"
-              br="35"
-              class="notice__btn"
-              @click="goToTelegram"
-            />
-          </div>
-        </template>
-        <template v-else-if="curGame >= 4">
-          <div class="notice">
-            <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div class="notice__text">
-              <!--
-              -->{{
-                getMagicWord(1) +
-                ' ' +
-                getMagicWord(2) +
-                ' ' +
-                getMagicWord(3) +
-                '\n\n' +
-                'Отправь полученное заклинание аудиосообщением'
-              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
-                >в телеграм-канал,</a
-              >{{ 'чтобы прогнать Крампуса\nи заработать памятные призы.' }}
-            </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
-          </div>
-        </template>
-        <template v-else-if="curGame >= 3">
-          <div class="notice">
-            <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div class="notice__text">
-              <!--
-              -->{{
-                (
-                  getMagicWord(2) +
-                  '\n\n' +
-                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
-                ).trim()
-              }}
-            </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
-          </div>
-        </template>
-        <template v-else-if="curGame >= 2">
-          <div class="notice">
-            <nuxt-img class="notice__img" src="/popup-magic.png" />
-            <div class="notice__text">
-              <!--
-        -->
-              {{
-                (
-                  getMagicWord(1) +
-                  '\n\n' +
-                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
-                ).trim()
-              }}
-            </div>
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
-          </div>
-        </template>
-        <template v-else>
-          <div class="notice">
-            <nuxt-img class="notice__img" src="/popup-rules.png" />
-            <Btn
-              w="37%"
-              h="10%"
-              max-w="160px"
-              max-h="50px"
-              bg="6"
-              br="35"
-              class="notice__btn"
-              @click="noticeClosed"
-            />
-          </div>
-        </template>
-      </template>
-      <template v-else-if="curGame === 1 && gameStep < 4">
-        <div class="game1">
-          <div class="game1__container">
-            <template v-if="gameStep === 0">
-              <Btn
-                class="game1__close-btn"
-                w="40px"
-                h="40px"
-                max-w="40px"
-                max-h="40px"
-                @click.native="closeModal"
-              />
-              <nuxt-img class="game1__img" src="/game1/game1-start.png" />
-              <Btn
-                class="game1__btn"
-                bg="3"
-                w="37%"
-                h="10%"
-                max-w="160px"
-                max-h="50px"
-                br="35"
-                @click="startGame"
-              />
-            </template>
-            <template v-else-if="gameStep === 1">
-              <template v-for="i in 5">
-                <nuxt-img
-                  v-if="!imgClicked[i - 1]"
-                  :key="i"
-                  preload
-                  :class="[`game1__item game1__item_${i}`]"
-                  :src="`/game1/items/item${i}out.png`"
-                  @click.native="onImgClicked($event, i - 1)"
-                />
-                <nuxt-img
-                  v-else
-                  :key="i + 10"
-                  preload
-                  :class="[
-                    `game1__item game1__item_${i}`,
-                    { 'no-interaction': i === 1 },
-                  ]"
-                  :src="`/game1/items/item${i}.png`"
-                  @click.native="onImgClicked($event, i - 1)"
-                />
-                <nuxt-img
-                  :key="i + 20"
-                  preload
-                  :src="`game1/tracker${i - 1}.png`"
-                  class="game1__tracker game-tracker"
-                  :class="{
-                    'game-tracker_visible':
-                      imgClicked.filter((x) => x).length === i - 1,
-                  }"
-                />
-              </template>
-              <nuxt-img
-                preload
-                class="game1__tracker game-tracker"
-                :class="{ 'game-tracker_visible': imgClicked.every((x) => x) }"
-                src="/game1/tracker5.png"
-              />
-              <nuxt-img class="game1__floor" src="/floors/floor1.png" />
-            </template>
-            <template v-else-if="gameStep === 2">
-              <nuxt-img class="game1__img" src="/game1/game1-finish.png" />
-              <Btn
-                class="game1__btn"
-                bg="4"
-                w="37%"
-                h="10%"
-                max-w="160px"
-                max-h="50px"
-                br="35"
-                @click="closeModalAndMoveGame"
-              />
-            </template>
-          </div>
-        </div>
-      </template>
-      <template v-else-if="curGame === 6 && gameStep === 4">
-        <div class="notice">
-          <nuxt-img class="notice__img" src="/popup-treasure.png" />
-          <div class="notice__treasure_text">
-            <!--
-            -->{{
-              'Поздравляем, вы вернули в Сбер Новый год! Переходите в секретный тг-канал, где спрятаны главные сокровища проказника Крампуса'
-            }}
-          </div>
-          <Btn
-            w="37%"
-            h="10%"
-            max-w="160px"
-            max-h="50px"
-            bg="10"
-            br="35"
-            class="notice__btn"
-            @click="goToTelegram"
-          />
-        </div>
-      </template>
-      <template v-else-if="gameStep === 0">
-        <div class="notice">
-          <nuxt-img class="notice__img" src="/popup-magic.png" />
-          <div class="notice__text">
-            <template v-if="curGame === 2">
-              <!--
-              -->{{
-                (
-                  getMagicWord(1) +
-                  '\n\n' +
-                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
-                ).trim()
-              }}
-            </template>
-            <template v-else-if="curGame === 3"
-              ><!--
-              -->{{
-                (
-                  getMagicWord(1) +
-                  ' ' +
-                  getMagicWord(2) +
-                  '\n\n' +
-                  'Собери древнее заклинание из трех слов, чтобы прогнать Крампуса.'
-                ).trim()
-              }}
-            </template>
-            <template v-else-if="curGame === 4">
-              <!--
-              -->{{
-                getMagicWord(1) +
-                ' ' +
-                getMagicWord(2) +
-                ' ' +
-                getMagicWord(3) +
-                '\n\n' +
-                'Отправь полученное заклинание аудиосообщением'
-              }}<a href="https://t.me/+-RSKS8P7NhplYmI6" target="_blank"
-                >в телеграм-канал,</a
-              >{{ 'чтобы прогнать Крампуса\nи заработать памятные призы.' }}
-            </template>
-          </div>
-          <Btn
-            w="37%"
-            h="10%"
-            max-w="160px"
-            max-h="50px"
-            bg="6"
-            br="35"
-            class="notice__btn"
-            @click="magicClosed"
-          />
-        </div>
-      </template>
-      <template v-else>
-        <PhaserGame v-if="createGame" :create-game="createGame" />
-      </template>
-    </vue-final-modal>
-    <button
-      class="house-page__notice-btn"
-      :class="{ swing: noticeAnimated }"
-      @click="
-        noticeAnimated = false
-        isModalPopupRules = true
-        showModal = true
-      "
-    />
-  </section>
+  </div>
 </template>
 
 <script>
@@ -1077,6 +1104,9 @@ export default {
     closeModal() {
       this.showModal = false
     },
+    moveGame() {
+      this.gameStep++
+    },
     closeModalAndMoveGame() {
       this.closeModal()
       // this.curGame++
@@ -1114,11 +1144,21 @@ export default {
         window.open('/comicsfinal/', '_self')
 
       this.showModal = false
-      this.gameStep = 1
+
+      if (this.curGame === 1) this.gameStep++
+      else this.gameStep = 1
     },
 
     getTopSrc(num) {
-      const christmas = this.gameStep >= 2 ? 'christmas' : ''
+      const curGame = this.curGame
+      let christmas = this.gameStep >= 2 ? 'christmas' : ''
+
+      if (curGame) {
+        christmas =
+          this.gameStep >= 2 || (this.curGame === 2 && num === 1)
+            ? 'christmas'
+            : ''
+      }
       return `/tops/top${num}${christmas}.png`
     },
     getFloorSrc(num) {
@@ -1156,6 +1196,14 @@ export default {
 </script>
 
 <style scoped lang="less">
+.preload {
+  display: none;
+
+  img {
+    width: 0;
+    height: 0;
+  }
+}
 .debug {
   position: fixed;
   background: #fff;
@@ -1447,7 +1495,8 @@ a {
 
   &__dialog_top6_christmas {
     top: -30%;
-    left: -100%;
+    // left: -100%;
+    right: 50%;
     pointer-events: none;
     touch-action: none;
   }

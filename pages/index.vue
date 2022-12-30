@@ -34,9 +34,6 @@
       <template v-for="i in 5">
         <nuxt-img :key="i + 80" :src="`/tops/top${i}christmas.png`" />
       </template>
-      <template v-for="i in 6">
-        <nuxt-img :key="i + 60" :src="`/comics/frame${i}.svg`" />
-      </template>
       <nuxt-img :src="`/house2.png`" />
       <nuxt-img :src="`/popup-rules.png`" />
       <nuxt-img :src="`/popup-magic.png`" />
@@ -65,19 +62,28 @@ export default {
   },
   methods: {
     playBackgroundSound() {
-      this.audio = new Audio('/sounds/sbergrinch_main_loop.mp3')
-      this.audio.addEventListener(
-        'ended',
-        function () {
-          this.currentTime = 0
-          this.play()
-        },
-        false
-      )
-      this.audio.play()
+      if (this.audio) {
+        this.audio.addEventListener(
+          'ended',
+          function () {
+            this.currentTime = 0
+            this.play()
+          },
+          false
+        )
+        this.audio.play()
+      }
+    },
+    playBtnClick() {
+      if (this.audioBtn) {
+        this.audioBtn.play()
+      }
     },
   },
+  created() {},
   mounted() {
+    this.audio = new Audio('/sounds/sbergrinch_main_loop.mp3')
+    this.audioBtn = new Audio('/sounds/buttom_common.mp3')
     if (!this.audio) this.playBackgroundSound()
   },
   beforeDestroy() {
